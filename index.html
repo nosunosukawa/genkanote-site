@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原価ノート — サポート</title>
+<meta name="description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出る、お菓子・パンの個人販売者向けアプリのサポートページ。買い切り、サブスクなし。">
+<style>
+  /* 配色はアプリ本体の src/ui/theme.ts と同じトークン。
+     画面と地続きに見えることが、審査でも利用者にとっても信用になる */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.7;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+
+  header{margin:20px 0 32px}
+  h1{font-size:36px;line-height:1.1;letter-spacing:-.5px;font-weight:800}
+  header p{margin-top:10px;font-size:16px;color:var(--ink-soft)}
+  .claim{display:inline-block;margin-top:16px;font-size:13px;font-weight:800;
+    letter-spacing:.4px;color:var(--accent);border:1.5px solid var(--accent);
+    border-radius:8px;padding:6px 11px}
+
+  h2{font-size:12px;letter-spacing:1.4px;color:var(--ink-soft);
+    margin:38px 0 12px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px;display:flex;gap:14px;align-items:stretch}
+  .card + .card{margin-top:10px}
+  /* 左端の色片はアプリの原価率バッジと同じ判定色 */
+  .pad{width:5px;border-radius:2.5px;flex:none;background:var(--line)}
+  .pad.ok{background:var(--ok)} .pad.low{background:var(--low)}
+  .pad.high{background:var(--high)} .pad.accent{background:var(--accent)}
+  .body{flex:1}
+  .card h3{font-size:16px;margin-bottom:6px;letter-spacing:-.2px}
+  .card p,.card li{font-size:15px}
+  .card ul{padding-left:20px;margin-top:8px}
+  .card li{margin-top:4px}
+  .card p + p{margin-top:8px}
+  a{color:var(--accent);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .muted{color:var(--ink-soft);font-size:13.5px}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+</style>
+<meta property="og:title" content="原価ノート — レシピ原価計算・食品表示ラベル">
+<meta property="og:description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出ます。買い切り、サブスクなし。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/">
+<meta property="og:type" content="website">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>原価ノート</h1>
+    <p>レシピを1回入力すると、原価・原価率・売価と、そのまま印刷できる
+       食品表示ラベル（原材料名・栄養成分表示）が同時に出ます。
+       お菓子・パンを個人で販売している方のための道具です。</p>
+    <span class="claim">買い切り。サブスクはありません。</span>
+  </header>
+
+  <h2 id="support">サポート</h2>
+  <div class="card">
+    <div class="pad accent"></div>
+    <div class="body">
+      <h3>連絡先</h3>
+      <p>質問・不具合報告・計算や表示の指摘はこちらへ:
+         <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></p>
+      <p class="muted">個人で開発しています。全部読みます。返信は1〜2日いただくことがあります。
+         計算がおかしいと思ったら、材料の価格・内容量・配合量とアプリの表示値を
+         書いて送ってください。手計算と突き合わせて確認します。</p>
+    </div>
+  </div>
+
+  <h2>よくある質問</h2>
+
+  <div class="card">
+    <div class="pad ok"></div>
+    <div class="body">
+      <h3>無料でどこまで使えますか？</h3>
+      <p>レシピ5件まで、原価計算の全機能（歩留・製造ロス・人件費・包装費・販売手数料・
+         売価と原価率の判定）、材料CSVの取り込み、iCloud同期が無料です。
+         食品表示ラベルは透かし付きのプレビューまで見られます。</p>
+      <p>買い切りの「原価ノート Pro」を購入すると、レシピ無制限・ラベルPDFの透かしなし出力・
+         CSV書き出しが使えます。一度買えば終わりで、期限はありません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad accent"></div>
+    <div class="body">
+      <h3>購入したのに無料版のままです</h3>
+      <p>購入時と同じApple IDでサインインした状態で、
+         <strong>設定 → 原価ノート Pro → 以前の購入を復元</strong> をタップしてください。
+         購入はApple IDに紐づくので、機種変更しても引き継がれます。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad low"></div>
+    <div class="body">
+      <h3>原価はどう計算されていますか？</h3>
+      <p>総原価 = 材料費（歩留・製造ロス込み）+ 人件費（作業時間 × 時給・任意）+
+         包装費 + 販売手数料。1個あたりに割って、売価に対する原価率と、
+         あなたが決めた「死守原価率」との判定を出します。</p>
+      <p>材料の値段を変えると、その材料を使う全レシピの原価が自動で再計算されます。
+         値上げのたびに全部を直す作業はいりません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad high"></div>
+    <div class="body">
+      <h3>ラベルの栄養成分表示は、そのまま使えますか？</h3>
+      <p>アプリの栄養成分表示は、文部科学省「日本食品標準成分表（八訂）」から計算した
+         <strong>推定値</strong>です。食品表示基準で認められている方法で、ラベルには
+         「この表示値は、目安です。」が常に併記されます。分析機関に出さなくても
+         適法に表示できる形です。</p>
+      <p>ただし<strong>表示の最終責任は販売者（あなた）にあります</strong>。
+         販売形態によって必要な表示は変わるので、迷ったら最寄りの保健所・
+         消費生活センターに確認してください。アプリは計算と印字の補助に徹します。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad ok"></div>
+    <div class="body">
+      <h3>通信やアカウントは必要ですか？</h3>
+      <p>いいえ。アカウント登録はなく、計算はすべて端末の中で動きます。
+         八訂成分表もアプリに同梱しています。通信を使うのは、App Storeでの購入処理と、
+         あなた自身のiCloudへの同期だけです。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad accent"></div>
+    <div class="body">
+      <h3>機種変更やデータの控えは？</h3>
+      <p>レシピ・材料・設定は同じApple IDのiCloudに自動で同期されます。
+         新しいiPhoneでアプリを入れて「今すぐ同期」を押せば戻ります。
+         設定からバックアップファイルの書き出し・取り込みもできます。</p>
+    </div>
+  </div>
+
+  <h2>だいじな注意</h2>
+  <div class="card">
+    <div class="pad high"></div>
+    <div class="body">
+      <h3>食品表示・アレルゲンについて</h3>
+      <ul>
+        <li>アレルゲン（29品目）は材料ごとにあなたが設定した内容がラベルに反映されます。
+            原材料の袋の表示を確認して設定してください。</li>
+        <li>栄養成分は推定値です。「100gあたり」表示には出来高総量の入力が必要です。</li>
+        <li>営業許可・施設基準・必要な表示項目は自治体・販売形態で異なります。
+            販売前に保健所へ確認することをおすすめします。</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="privacy.html">プライバシーポリシー</a>
+  </footer>
+
+</div>
+</body>
+</html>

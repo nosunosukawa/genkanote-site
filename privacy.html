@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原価ノート — プライバシーポリシー</title>
+<meta name="description" content="原価ノートは何も収集しません。アカウントなし、解析なし、広告なし、開発者のサーバーなし。データは端末とあなた自身のiCloudの中だけにあります。">
+<style>
+  /* index.html と同じトークン（アプリ本体の src/ui/theme.ts 由来） */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.7;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+  header{margin:20px 0 30px}
+  h1{font-size:28px;line-height:1.2;letter-spacing:-.4px;font-weight:800}
+  .lead{margin-top:14px;font-size:17px;line-height:1.6;font-weight:600}
+  .date{margin-top:10px;font-size:13px;color:var(--ink-soft)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px;display:flex;gap:14px;align-items:stretch}
+  .card + .card{margin-top:10px}
+  .pad{width:5px;border-radius:2.5px;flex:none;background:var(--ok)}
+  .body{flex:1}
+  .card h2{font-size:16px;margin-bottom:6px;letter-spacing:-.2px}
+  .card p{font-size:15px}
+  .card p + p{margin-top:8px}
+  a{color:var(--accent);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:underline}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>原価ノート プライバシーポリシー</h1>
+    <p class="lead">原価ノートは何も収集しません。アカウントも、解析も、広告も、
+       開発者のサーバーもありません。</p>
+    <p class="date">最終更新: 2026年8月</p>
+  </header>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>収集するもの</h2>
+      <p>ありません。原価ノートにはアクセス解析・クラッシュレポート・広告識別子・
+         データを集める第三者SDKが入っていません。開発者があなたのレシピ・材料・
+         価格・端末情報・位置情報を受け取ることはありません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>データの置き場所</h2>
+      <p>レシピ・材料・設定は、端末内のデータベースに保存されます。
+         アプリを削除するとこのデータも消えます。</p>
+      <p>iCloud同期をオンにしている場合（iCloudにサインインしていれば自動）、
+         同じデータが<strong>あなた自身のiCloud</strong>のアプリ専用領域に保存されます。
+         これはAppleがあなたのApple IDに対して提供する私有領域で、開発者からは
+         見えず、アクセスもできません。取り扱いはAppleのプライバシーポリシーに従います。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>購入</h2>
+      <p>買い切りの「原価ノート Pro」の決済はAppleがApp Storeを通じて処理します。
+         アプリはこのApple IDが購入済みかどうかをAppleに問い合わせるだけで、
+         支払い情報がアプリや開発者に渡ることはありません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>栄養成分の計算</h2>
+      <p>栄養成分表示の計算に使う「日本食品標準成分表（八訂）」はアプリに同梱されており、
+         計算はすべて端末内で行われます。レシピの内容が外部に送信されることはありません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>子どもについて</h2>
+      <p>原価ノートは4+の一般向けユーティリティです。子どもを含め、誰からも
+         意図的に情報を収集することはありません。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pad"></div>
+    <div class="body">
+      <h2>変更と連絡先</h2>
+      <p>このポリシーを変更する場合は、更新した本文をアプリと一緒に配布し、
+         このページにも新しい日付で掲載します。</p>
+      <p>このポリシーについての質問:
+         <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></p>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="index.html">サポート</a>
+  </footer>
+
+</div>
+</body>
+</html>
