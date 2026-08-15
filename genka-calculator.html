@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レシピ原価計算ツール（無料）— 原価率と売価がその場で出る</title>
+<meta name="description" content="材料と出来高を入れるだけで、1個あたりの原価・原価率・おすすめ売価をその場で計算。歩留・製造ロス・人件費・包装費・販売手数料まで入る無料のレシピ原価計算ツール。お菓子・パンの個人販売に。">
+<style>
+  /* 配色はアプリ本体の src/ui/theme.ts と同じトークン。
+     画面と地続きに見えることが、審査でも利用者にとっても信用になる */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.7;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+  .back{font-size:13.5px;font-weight:600}
+  header{margin:18px 0 26px}
+  h1{font-size:30px;line-height:1.2;letter-spacing:-.5px;font-weight:800}
+  header p{margin-top:10px;font-size:15.5px;color:var(--ink-soft)}
+  h2{font-size:12px;letter-spacing:1.4px;color:var(--ink-soft);margin:34px 0 12px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card + .card{margin-top:10px}
+  .card h3{font-size:16px;margin-bottom:6px}
+  .card p,.card li{font-size:15px}
+  .card ul{padding-left:20px;margin-top:8px}
+  .card li{margin-top:4px}
+  a{color:var(--accent);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .muted{color:var(--ink-soft);font-size:13px}
+
+  label{font-size:12px;letter-spacing:.8px;color:var(--ink-soft);font-weight:700}
+  input,select{font:inherit;color:var(--ink);background:var(--bg);
+    border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0}
+
+  /* 材料表 */
+  .ingHead,.ingRow{display:grid;grid-template-columns:1fr 5.2em 5.2em 5.2em 2em;
+    gap:8px;align-items:center}
+  .ingHead{margin-bottom:6px}
+  .ingRow + .ingRow{margin-top:8px}
+  .ingRow input{padding:8px 9px}
+  .del{border:none;background:none;color:var(--ink-soft);font-size:18px;cursor:pointer;
+    padding:4px;line-height:1}
+  .del:hover{color:var(--high)}
+  .addRow{margin-top:12px;font:inherit;font-weight:700;color:var(--accent);
+    background:none;border:1.5px dashed var(--accent);border-radius:10px;
+    padding:8px 14px;cursor:pointer;width:100%}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+  .field{display:flex;flex-direction:column;gap:5px}
+
+  /* 結果 */
+  .result{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+  .headline{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .cost{font-size:36px;font-weight:800;letter-spacing:-.5px}
+  .rate{font-size:20px;font-weight:800;padding:3px 12px;border-radius:9px;color:#fff}
+  .rate.ok{background:var(--ok)} .rate.warn{background:var(--low)} .rate.over{background:var(--high)}
+  .rate.none{background:var(--ink-soft)}
+  .breakdown{margin-top:12px;font-size:14px;color:var(--ink-soft)}
+  .suggest{margin-top:12px;font-size:15px}
+  .suggest strong{font-size:20px}
+  .err{color:var(--high);font-weight:600;font-size:14.5px;margin-top:10px}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+</style>
+<meta property="og:title" content="レシピ原価計算ツール（無料）— 原価率と売価がその場で出る">
+<meta property="og:description" content="材料と出来高を入れるだけで、1個あたりの原価・原価率・おすすめ売価を計算。歩留・ロス・人件費・手数料まで入ります。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/genka-calculator.html">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication",
+ "name":"レシピ原価計算ツール",
+ "applicationCategory":"UtilitiesApplication",
+ "operatingSystem":"Any",
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
+ "url":"https://nosunosukawa.github.io/genkanote-site/genka-calculator.html"}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="back"><a href="./">&larr; 原価ノート</a></p>
+
+  <header>
+    <h1>レシピ原価計算ツール</h1>
+    <p>材料と出来高を入れるだけで、1個あたりの原価・原価率・おすすめ売価が出ます。
+       Excelで作ると漏れがちな<strong>製造ロス・人件費・販売手数料</strong>まで
+       入った計算です（アプリと同じ計算エンジン）。</p>
+  </header>
+
+  <div class="card">
+    <div class="ingHead">
+      <label>材料名</label><label>購入価格</label><label>内容量g</label><label>使う量g</label><span></span>
+    </div>
+    <div id="rows"></div>
+    <button class="addRow" id="addRow" type="button">＋ 材料を足す</button>
+    <p class="muted" style="margin-top:8px">例: 200gのバターを480円で買い、そのうち100g使う →
+       480 / 200 / 100。卵は1個約50gで換算してください。</p>
+
+    <div class="grid" style="margin-top:16px">
+      <div class="field">
+        <label for="yieldCount">出来高（何個できるか）</label>
+        <input id="yieldCount" type="number" inputmode="numeric" min="1" step="1" value="20">
+      </div>
+      <div class="field">
+        <label for="lossRate">製造ロス（%）</label>
+        <input id="lossRate" type="number" inputmode="decimal" min="0" max="90" step="1" value="0">
+      </div>
+      <div class="field">
+        <label for="minutes">作業時間（分）</label>
+        <input id="minutes" type="number" inputmode="numeric" min="0" step="5" value="0">
+      </div>
+      <div class="field">
+        <label for="wage">時給（円）</label>
+        <input id="wage" type="number" inputmode="numeric" min="0" step="50" value="1200">
+      </div>
+      <div class="field">
+        <label for="pack">包装費（円/個）</label>
+        <input id="pack" type="number" inputmode="decimal" min="0" step="1" value="0">
+      </div>
+      <div class="field">
+        <label for="fee">販売手数料（%）</label>
+        <input id="fee" type="number" inputmode="decimal" min="0" max="50" step="0.1" value="0">
+      </div>
+      <div class="field">
+        <label for="price">売価（円/個・任意）</label>
+        <input id="price" type="number" inputmode="numeric" min="0" step="10" placeholder="未定なら空欄">
+      </div>
+      <div class="field">
+        <label for="target">目標原価率（%）</label>
+        <input id="target" type="number" inputmode="numeric" min="5" max="90" step="5" value="30">
+      </div>
+    </div>
+    <p class="muted" style="margin-top:8px">手数料のめやす: minne 10.56%・Creema 11%・
+       BASE 6.6%＋40円（率だけ入れてください）・対面販売は0%。</p>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <h2>この計算の中身</h2>
+  <div class="card">
+    <p>材料費 = Σ(購入価格 ÷ 内容量 × 使う量) ÷ (1 − 製造ロス率)。
+       そこに人件費（作業時間 × 時給）を足し、出来高で割って、包装費と
+       売価×手数料率を足したものが<strong>1個あたりの総原価</strong>です。
+       おすすめ売価は「総原価 ÷ 売価 ＝ 目標原価率」になるよう逆算し、10円単位に切り上げています。</p>
+    <p style="margin-top:8px" class="muted">人件費を入れると原価は一段上がります。でも自分の時間を
+       0円にした値付けは、売れるほど疲れて続かない値付けです。</p>
+  </div>
+
+  <h2>毎回この入力をしたくない人へ</h2>
+  <div class="card">
+    <p><a href="./">原価ノート</a>（iOSアプリ）は、材料を一度登録すれば全レシピで使い回せて、
+       値上げしたら全レシピに自動で伝わります。八訂成分表つきで、原価と同時に
+       食品表示ラベル（原材料名・栄養成分）のPDFも出ます。買い切り・サブスクなし。</p>
+  </div>
+
+  <footer>
+    <p>計算結果はめやすです。表示・価格の最終判断はご自身でお願いします。
+       &copy; 2026 原価ノート</p>
+  </footer>
+</div>
+
+<script src="genka.js"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var rowsEl = $("rows");
+  var seq = 0;
+
+  function addRow(name, price, pack, use){
+    var div = document.createElement("div");
+    div.className = "ingRow";
+    div.innerHTML =
+      '<input type="text" placeholder="材料 ' + (++seq) + '" value="' + (name || "") + '">' +
+      '<input type="number" inputmode="decimal" min="0" placeholder="円" value="' + (price || "") + '">' +
+      '<input type="number" inputmode="decimal" min="0" placeholder="g" value="' + (pack || "") + '">' +
+      '<input type="number" inputmode="decimal" min="0" placeholder="g" value="' + (use || "") + '">' +
+      '<button class="del" type="button" title="行を消す">×</button>';
+    div.querySelectorAll("input").forEach(function(i){ i.addEventListener("input", compute); });
+    div.querySelector(".del").addEventListener("click", function(){
+      div.remove(); compute();
+    });
+    rowsEl.appendChild(div);
+  }
+
+  function compute(){
+    var out = $("result");
+    var ings = new Map();
+    var lines = [];
+    var i = 0;
+    rowsEl.querySelectorAll(".ingRow").forEach(function(row){
+      var f = row.querySelectorAll("input");
+      var price = parseFloat(f[1].value), pack = parseFloat(f[2].value), use = parseFloat(f[3].value);
+      if (!(price >= 0) || !(pack > 0) || !(use > 0)) return;
+      var id = "i" + (i++);
+      ings.set(id, { id: id, name: f[0].value || id, purchasePrice: price,
+                     packAmount: pack, packUnit: "g", yieldRate: 1, allergens: [] });
+      lines.push({ ref: { kind: "ingredient", id: id }, amount: use, unit: "g" });
+    });
+
+    var yieldCount = parseInt($("yieldCount").value, 10);
+    var lossRate = (parseFloat($("lossRate").value) || 0) / 100;
+    var feeRate = (parseFloat($("fee").value) || 0) / 100;
+    var priceV = parseFloat($("price").value);
+    var target = (parseFloat($("target").value) || 30) / 100;
+
+    if (!lines.length || !(yieldCount > 0)){
+      out.innerHTML = '<p class="muted">材料を1行以上と、出来高を入れてください。</p>';
+      return;
+    }
+    var recipe = {
+      id: "r", name: "recipe", lines: lines,
+      yieldCount: yieldCount, lossRate: Math.min(Math.max(lossRate, 0), 0.9),
+      labor: { minutes: parseFloat($("minutes").value) || 0 },
+      packagingCostPerPiece: parseFloat($("pack").value) || 0,
+      feeRate: Math.min(Math.max(feeRate, 0), 0.5),
+      price: priceV > 0 ? priceV : undefined
+    };
+    var ctx = { ingredients: ings, recipes: new Map(),
+                defaultHourlyWage: parseFloat($("wage").value) || 0 };
+    var b, sp = null, spErr = null;
+    try { b = Genka.costBreakdown(recipe, ctx); }
+    catch(e){ out.innerHTML = '<p class="err">' + (e.message || "計算できませんでした") + "</p>"; return; }
+    try { sp = Genka.roundPriceUp(Genka.suggestedPrice(recipe, ctx, target)); }
+    catch(e){ spErr = "目標原価率が手数料率以下だと売価は逆算できません。"; }
+
+    var yen = function(v){ return "¥" + (Math.round(v * 10) / 10).toLocaleString("ja-JP"); };
+    var html = '<div class="headline"><span class="cost">' + yen(b.totalPerPiece) + '<span style="font-size:16px;font-weight:600"> /個</span></span>';
+    if (b.costRate != null){
+      var vd = Genka.costVerdict(b.costRate, target);
+      var label = vd === "ok" ? "" : vd === "warn" ? "（目標まぎわ）" : "（目標オーバー）";
+      html += '<span class="rate ' + vd + '">原価率 ' + Math.round(b.costRate * 1000) / 10 + "%" + label + "</span>";
+    } else {
+      html += '<span class="rate none">売価を入れると原価率が出ます</span>';
+    }
+    html += "</div>";
+    html += '<p class="breakdown">内訳（1個あたり）: 材料 ' + yen(b.materialsPerPiece) +
+            " ／ 人件費 " + yen(b.laborPerPiece) +
+            " ／ 包装 " + yen(b.packagingPerPiece) +
+            " ／ 手数料 " + yen(b.feePerPiece) + "</p>";
+    if (sp != null){
+      html += '<p class="suggest">原価率' + Math.round(target * 100) + "%におさめる売価: <strong>" +
+              yen(sp) + "</strong> /個</p>";
+    } else if (spErr){
+      html += '<p class="err">' + spErr + "</p>";
+    }
+    out.innerHTML = html;
+  }
+
+  ["yieldCount","lossRate","minutes","wage","pack","fee","price","target"].forEach(function(id){
+    $(id).addEventListener("input", compute);
+  });
+  $("addRow").addEventListener("click", function(){ addRow(); });
+
+  // 初期3行（サンプル値: バタークッキー相当）
+  addRow("バター", 480, 200, 100);
+  addRow("薄力粉", 300, 1000, 200);
+  addRow("砂糖", 250, 1000, 80);
+  compute();
+})();
+</script>
+</body>
+</html>
