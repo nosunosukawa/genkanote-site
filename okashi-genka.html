@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>お菓子の原価計算のやり方 — クッキー1枚で全部の数字を出す【計算例つき】</title>
+<meta name="description" content="手作りお菓子の値段の付け方。材料費だけの原価計算が現実より安く出る理由（歩留まり・製造ロス・人件費・包装・委託手数料）を、型抜きクッキー30枚の実例で最後まで計算します。">
+<style>
+  /* 配色はトップページ（index.html）と同じトークン */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.8;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+  header{margin:20px 0 8px}
+  .crumb{font-size:13.5px}
+  h1{font-size:27px;line-height:1.35;letter-spacing:-.4px;font-weight:800;margin-top:10px}
+  .meta{margin-top:8px;font-size:13.5px;color:var(--ink-soft)}
+  h2{font-size:19px;font-weight:800;letter-spacing:-.2px;margin:40px 0 10px}
+  p + p{margin-top:10px}
+  .lead{margin-top:18px;font-size:16.5px}
+  a{color:var(--accent);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .muted{color:var(--ink-soft);font-size:13.5px}
+  .scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch;
+    border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  table{border-collapse:collapse;min-width:100%;font-size:14.5px;white-space:nowrap}
+  th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line)}
+  thead th{background:var(--card);font-size:12.5px;color:var(--ink-soft);text-align:right}
+  tbody th,thead th:first-child{text-align:left}
+  tfoot th{text-align:left}
+  tfoot td,tfoot th{font-weight:800;border-bottom:none;border-top:2px solid var(--line)}
+  tr.total td,tr.total th{font-weight:800;border-top:2px solid var(--line)}
+  .hint{margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+  @media (min-width:700px){ .hint{display:none} }
+  @media (max-width:560px){ table{font-size:13px} th,td{padding:6px 9px} }
+  .cta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-top:40px}
+  .cta h2{margin:0 0 8px;font-size:16px}
+  .cta p{font-size:14.5px}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+</style>
+<meta property="og:title" content="お菓子の原価計算のやり方 — クッキー1枚で全部の数字を出す">
+<meta property="og:description" content="材料費だけの原価計算が現実より安く出る理由を、型抜きクッキー30枚の実例で最後まで計算します。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/okashi-genka.html">
+<meta property="og:type" content="article">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="crumb"><a href="index.html">原価ノート</a> › ガイド</p>
+    <h1>お菓子の原価計算のやり方<br>——クッキー1枚で全部の数字を出す</h1>
+    <p class="meta">この記事の数値は、アプリと同じ計算エンジンを実行して生成しています（手計算ではありません）。</p>
+  </header>
+
+  <p class="lead">「材料費を足して、2〜3倍の値段を付ける」——手作りお菓子の値付けで
+     いちばんよく聞くやり方ですが、この計算は<strong>現実より安く</strong>出ます。
+     材料費に乗ってこない費用が4つ（歩留まり・製造ロス・人件費・販売手数料）あるからです。
+     型抜きクッキー30枚を委託販売する例で、最後まで数字を出してみます。</p>
+
+  <h2>材料費だけの計算が安く出る4つの理由</h2>
+  <p><strong>① 歩留まり。</strong>卵は殻を捨てます。10個¥320の卵でも、使える部分だけで
+     数え直すと1個あたりの実質は上がります。バナナ・柑橘・かぼちゃなど、
+     捨てる部分がある材料はすべて同じです。</p>
+  <p><strong>② 製造ロス。</strong>割れたクッキー、型抜きの端、天板の焦げ。
+     売れない分の材料費は、売れた分が背負います。</p>
+  <p><strong>③ 人件費。</strong>自分の時間をゼロ円で数えると、「作れば作るほど
+     時給が下がる」ことに気づけません。最低賃金でよいので必ず入れます。</p>
+  <p><strong>④ 販売手数料。</strong>委託販売やハンドメイドマーケットの手数料は
+     <strong>売価に比例</strong>します。原価に足し算では入れられず、
+     売価の逆算のしかた自体が変わります（後述）。</p>
+
+  <!-- data:start（node make-genka-example.mjs が生成。手で直さない） -->
+  <h2>例: 型抜きクッキー30枚を、委託販売で売る</h2>
+  <p>前提はこうです。作業は計量から袋詰めまで<strong>90分</strong>、時給は
+     <strong>¥1,100</strong>で数えます。割れ・端切れの製造ロスを
+     <strong>5%</strong>、包装（OPP袋＋シール）を
+     <strong>1枚¥12</strong>、委託先の販売手数料を
+     <strong>30%</strong>とします。</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>材料</th><th>購入価格</th><th>使う量</th><th>この分の費用</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">バター（食塩不使用）</th>
+          <td>¥480 / 150g</td>
+          <td>150g</td><td>¥480</td><td class="muted"></td></tr>
+        <tr><th scope="row">薄力粉</th>
+          <td>¥320 / 1000g</td>
+          <td>200g</td><td>¥64</td><td class="muted"></td></tr>
+        <tr><th scope="row">グラニュー糖</th>
+          <td>¥280 / 1000g</td>
+          <td>90g</td><td>¥25.2</td><td class="muted"></td></tr>
+        <tr><th scope="row">卵</th>
+          <td>¥320 / 10個</td>
+          <td>1個</td><td>¥37.6</td><td class="muted">歩留85%（殻を除く）</td></tr>
+        <tr><th scope="row">アーモンドプードル</th>
+          <td>¥600 / 200g</td>
+          <td>50g</td><td>¥150</td><td class="muted"></td></tr>
+      </tbody>
+      <tfoot>
+        <tr><th scope="row">材料費（バッチ計）</th><td></td><td></td>
+          <td>¥796.7</td><td class="muted">ロス5%込み</td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+
+  <p>30枚で割ると、材料費は<strong>1枚あたり¥26.6</strong>。
+     1枚¥180で売るなら、材料費だけの原価率は
+     <strong>15%</strong>です。
+     ——ここで計算をやめると「よく売れて、儲かっているはずなのにお金が残らない」が始まります。</p>
+
+  <h2>全部入りの原価</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>費目</th><th>1枚あたり</th><th>どこから来るか</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">材料費</th><td>¥26.6</td><td class="muted">歩留・製造ロス込み</td></tr>
+        <tr><th scope="row">人件費</th><td>¥55</td><td class="muted">90分 × 時給¥1,100 ÷ 30枚</td></tr>
+        <tr><th scope="row">包装費</th><td>¥12</td><td class="muted">OPP袋＋シール</td></tr>
+        <tr><th scope="row">販売手数料</th><td>¥54</td><td class="muted">売価¥180の30%</td></tr>
+        <tr class="total"><th scope="row">合計</th><td><strong>¥147.6</strong></td>
+          <td class="muted">売価¥180に対して原価率<strong>82%</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+
+  <p>1枚¥180のクッキーの原価は、材料費だけ見れば
+     ¥26.6（15%）。
+     全部入れると<strong>¥147.6（原価率82%）</strong>。
+     手元に残るのは1枚あたり¥32.4です。</p>
+
+  <h2>目標の原価率から売価を逆算する</h2>
+  <p>原価率50%を守りたいとします。手数料は<strong>売価に比例して増える</strong>ので、
+     「原価の2倍」では計算が合いません。売価 = （材料＋人件費＋包装）÷（目標原価率 − 手数料率）
+     で逆算します。同じレシピでも:</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>売り方</th><th>手数料</th><th>原価率50%を守る売価</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">直販（マルシェ・イベント）</th><td>0%</td><td><strong>¥190</strong></td></tr>
+        <tr><th scope="row">委託販売</th><td>30%</td><td><strong>¥470</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+
+  <p>同じクッキーでも、直販なら¥190、手数料30%の委託なら
+     <strong>¥470</strong>。委託の手数料は「売価の30%」なので、
+     売価を上げるほど手数料も増え、逆算の分母（50% − 30% = 20%）が小さくなるためです。
+     委託で売るものと直販で売るものの値段が同じでよいはずがない——これが
+     材料費だけの計算では絶対に見えない結論です。</p>
+  <!-- data:end -->
+
+  <h2>自分のレシピで計算するには</h2>
+  <p>同じ計算を、材料と出来高を入れるだけでできる
+     <a href="genka-calculator.html">無料の原価計算ツール（ブラウザで動きます）</a>を
+     置いています。登録不要で、入力した内容はどこにも送信されません。</p>
+
+  <div class="cta">
+    <h2>毎回の計算を道具にするなら</h2>
+    <p>iOS アプリ<a href="index.html">「原価ノート」</a>は、レシピを1回入力すると
+       原価・原価率・売価と、そのまま印刷できる食品表示ラベル（原材料名・栄養成分）が
+       同時に出ます。材料の値段を変えると、その材料を使う全レシピが自動で再計算されます。
+       買い切りで、サブスクはありません。</p>
+  </div>
+
+  <h2>この記事の数値について</h2>
+  <p class="muted">材料の購入価格・時給・手数料率は例です。実際の値付けはご自身の仕入れ値と
+     販売条件で計算してください。計算式（歩留まり・製造ロス・人件費・包装費・販売手数料の
+     扱い）はアプリ「原価ノート」の計算エンジンそのもので、数値は
+     <code>make-genka-example.mjs</code> がエンジンを実行して生成しています。</p>
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="index.html">原価ノート</a> · <a href="privacy.html">プライバシーポリシー</a>
+  </footer>
+
+</div>
+</body>
+</html>
