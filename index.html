@@ -6,50 +6,225 @@
 <title>原価ノート — お菓子・パンの原価計算と食品表示ラベルが1つで済むアプリ</title>
 <meta name="description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出る、お菓子・パンの個人販売者向けアプリのサポートページ。買い切り、サブスクなし。">
 <style>
-  /* 配色はアプリ本体の src/ui/theme.ts と同じトークン。
-     画面と地続きに見えることが、審査でも利用者にとっても信用になる */
+  /* ───────────────────────────────────────────────
+     「厨房のノート」
+     地は仕込みノートの紙（罫の入った暖かい紙）。
+     数字だけは等幅・tabular で硬く出す——この対比が全部。
+     判定色（緑/琥珀/赤）と藍はアプリ本体の src/ui/theme.ts と同じ値。
+     ─────────────────────────────────────────────── */
   :root{
-    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
-    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+    --paper:#FAF6EE;          /* 紙。工房の作業台に置いたノート */
+    --paper-rule:rgba(22,24,29,.055); /* 罫 */
+    --card:#FFFDF8;
+    --ink:#16181D;            /* 鉄の黒。本文と読み値 */
+    --ink-soft:#5A5347;
+    --ink-faint:#6E6659;
+    --line:#DED5C4;
+    --line-soft:#EBE3D4;
+    --accent:#2B4A78;         /* 帆前掛けの藍。操作とリンクだけ */
+    --accent-bg:#E9EEF6;
+    --ok:#1F7A45; --ok-bg:#E7F1E9;
+    --warn:#7E5900; --warn-bg:#F5EEDB;
+    --over:#A62F22; --over-bg:#F7E7E4;
+    --tape:#E7DCC2;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
-      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+      --paper:#15171B;
+      --paper-rule:rgba(232,234,237,.05);
+      --card:#1D2025;
+      --ink:#EAECEF; --ink-soft:#A9A296; --ink-faint:#9A9386;
+      --line:#33373D; --line-soft:#2A2E33;
+      --accent:#9DB7DC; --accent-bg:#232B36;
+      --ok:#6FBE90; --ok-bg:#1D2A22;
+      --warn:#D6AC55; --warn-bg:#2A2517;
+      --over:#E38A7C; --over-bg:#2E1F1C;
+      --tape:#3A342A;
     }
   }
+
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background-color:var(--paper);
+    /* ノートの罫。読みやすさを壊さない濃さに留める */
+    background-image:repeating-linear-gradient(
+      to bottom, transparent 0, transparent 33px,
+      var(--paper-rule) 33px, var(--paper-rule) 34px);
+    color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.7;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:680px;margin:0 auto}
+    font-size:16px;line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+    overflow-wrap:anywhere;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 72px}
 
-  header{margin:20px 0 32px}
-  h1{font-size:36px;line-height:1.1;letter-spacing:-.5px;font-weight:800}
-  header p{margin-top:10px;font-size:16px;color:var(--ink-soft)}
-  .claim{display:inline-block;margin-top:16px;font-size:13px;font-weight:800;
-    letter-spacing:.4px;color:var(--accent);border:1.5px solid var(--accent);
-    border-radius:8px;padding:6px 11px}
+  /* 数字は等幅・桁が揺れない。アプリの読み値と同じ質感 */
+  .num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+       font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 
-  h2{font-size:12px;letter-spacing:1.4px;color:var(--ink-soft);
-    margin:38px 0 12px;font-weight:700}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:20px;display:flex;gap:14px;align-items:stretch}
-  .card + .card{margin-top:10px}
-  /* 左端の色片はアプリの原価率バッジと同じ判定色 */
-  .pad{width:5px;border-radius:2.5px;flex:none;background:var(--line)}
-  .pad.ok{background:var(--ok)} .pad.low{background:var(--low)}
-  .pad.high{background:var(--high)} .pad.accent{background:var(--accent)}
-  .body{flex:1}
-  .card h3{font-size:16px;margin-bottom:6px;letter-spacing:-.2px}
-  .card p,.card li{font-size:15px}
-  .card ul{padding-left:20px;margin-top:8px}
-  .card li{margin-top:4px}
-  .card p + p{margin-top:8px}
-  a{color:var(--accent);font-weight:600;text-decoration:none}
-  a:hover{text-decoration:underline}
-  .muted{color:var(--ink-soft);font-size:13.5px}
-  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+  a{color:var(--accent);font-weight:600;text-decoration:none;
+    text-decoration-line:underline;text-decoration-thickness:1px;
+    text-underline-offset:3px;text-decoration-color:var(--line)}
+  a:hover{text-decoration-color:currentColor}
+  a:focus-visible,summary:focus-visible{outline:2.5px solid var(--accent);
+    outline-offset:3px;border-radius:3px}
+
+  /* ── 上部の帯: App Store 必須URL。スクロールせずに見つかること ── */
+  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:10px 16px}
+  .topbar .inner{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;
+    gap:4px 16px;align-items:baseline;font-size:13.5px;line-height:1.6}
+  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink)}
+  .topbar .sep{color:var(--ink-faint)}
+
+  /* ── ヘッダー ── */
+  header{padding:34px 0 8px}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--ink-faint)}
+  h1{font-size:clamp(30px,8.5vw,44px);line-height:1.12;letter-spacing:-.02em;
+     font-weight:800;margin-top:8px}
+  .lede{margin-top:14px;font-size:17px;line-height:1.75;color:var(--ink)}
+  .lede strong{font-weight:700}
+  .sub{margin-top:10px;font-size:15px;color:var(--ink-soft)}
+  .price-tag{display:inline-block;margin-top:18px;padding:7px 12px;
+    background:var(--tape);color:var(--ink);border-radius:3px;
+    font-size:13.5px;font-weight:700;letter-spacing:.02em}
+
+  /* ── 見出し ── */
+  h2{font-size:22px;line-height:1.35;letter-spacing:-.01em;font-weight:800;
+     margin:0 0 6px}
+  .sec{margin-top:48px}
+  .sec-label{font-size:11.5px;font-weight:700;letter-spacing:.2em;
+    color:var(--ink-faint);margin-bottom:10px}
+  .sec > p{margin-top:10px}
+  h3{font-size:16.5px;line-height:1.5;font-weight:700;letter-spacing:-.01em}
+
+  /* ── カード（ノートに貼った伝票） ── */
+  .card{background:var(--card);border:1px solid var(--line);
+    border-radius:4px;padding:18px}
+  .card + .card{margin-top:12px}
+  .card h3 + p,.card p + p,.card > p + ul{margin-top:8px}
+  .muted{color:var(--ink-soft);font-size:14.5px}
+  .tiny{color:var(--ink-faint);font-size:13px;line-height:1.7}
+  ul{padding-left:1.15em;margin-top:8px}
+  li{margin-top:6px}
+  li::marker{color:var(--ink-faint)}
+  p + p{margin-top:12px}
+
+  /* 用語の言い換え。専門語のすぐ横に置く */
+  .gloss{color:var(--ink-soft);font-size:.92em}
+
+  /* ── 一往復の図: 入口1つ / 出口2つ ── */
+  .flow{margin-top:18px}
+  .flow-in{background:var(--card);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:4px;padding:14px 16px}
+  .flow-in .t{font-weight:700}
+  .flow-arrow{display:block;text-align:center;color:var(--ink-faint);
+    font-size:18px;line-height:1;padding:8px 0}
+  .flow-out{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .flow-out > div{background:var(--card);border:1px solid var(--line);
+    border-radius:4px;padding:14px 16px}
+  .flow-out .t{font-weight:700;font-size:15px}
+  .flow-out .d{margin-top:6px;font-size:14px;color:var(--ink-soft);line-height:1.7}
+  @media (max-width:560px){.flow-out{grid-template-columns:1fr}}
+
+  /* ── 実例の伝票 ── */
+  .receipt{margin-top:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:4px;padding:18px}
+  .receipt-h{font-size:13px;font-weight:700;letter-spacing:.14em;
+    color:var(--ink-faint);padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  .row .k{font-size:14.5px;color:var(--ink-soft);min-width:0}
+  .row .v{font-size:19px;font-weight:600;white-space:nowrap}
+  .row .v .u{font-size:12.5px;color:var(--ink-faint);margin-left:2px;font-weight:400}
+  .row.total{border-bottom:2px solid var(--ink)}
+  .row.total .k{color:var(--ink);font-weight:700}
+  .row.total .v{font-size:24px;font-weight:700}
+  .verdict{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+  .chip{display:inline-block;padding:4px 9px;border-radius:3px;font-size:13px;
+    font-weight:700;letter-spacing:.02em}
+  .chip.over{background:var(--over-bg);color:var(--over)}
+  .chip.ok{background:var(--ok-bg);color:var(--ok)}
+  .readout{font-size:38px;font-weight:700;line-height:1.05}
+  .readout.over{color:var(--over)} .readout.ok{color:var(--ok)}
+  .readout .u{font-size:16px;font-weight:600}
+
+  /* ── 4段の積み上げ ── */
+  .steps{margin-top:16px;background:var(--card);border:1px solid var(--line);
+    border-radius:4px;padding:18px 16px}
+  .step{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .step:last-child{border-bottom:0;padding-bottom:4px}
+  .step-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .step-head > div{min-width:0}
+  .step-n{font-size:11.5px;font-weight:700;letter-spacing:.16em;color:var(--ink-faint)}
+  .step-t{font-size:15px;font-weight:700;margin-top:2px}
+  .step-v{font-size:20px;font-weight:700;white-space:nowrap}
+  .step-v .u{font-size:12.5px;color:var(--ink-faint);font-weight:400;margin-left:2px}
+  .bar{margin-top:9px;height:12px;background:var(--line-soft);border-radius:2px;
+    overflow:hidden}
+  .bar > span{display:block;height:100%;border-radius:2px}
+  .bar.g1 > span{background:var(--ink-faint)}
+  .bar.g2 > span{background:var(--ok)}
+  .bar.g3 > span{background:var(--warn)}
+  .bar.g4 > span{background:var(--over)}
+  .step-d{margin-top:7px;font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+  .step-rate{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-variant-numeric:tabular-nums;font-weight:700}
+
+  /* ── 画面写真 ── */
+  figure{margin:0}
+  .shot-hero{margin-top:18px;text-align:center}
+  .shot-hero img{width:100%;max-width:340px;height:auto;border:1px solid var(--line);
+    border-radius:10px;background:var(--card)}
+  figcaption{margin-top:10px;font-size:13px;color:var(--ink-faint);line-height:1.7;
+    text-align:left}
+  .shots{margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .shots img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px;
+    background:var(--card)}
+  .shots figcaption{margin-top:8px;font-size:12.5px}
+  @media (max-width:560px){.shots{grid-template-columns:1fr 1fr}}
+  @media (max-width:380px){.shots{grid-template-columns:1fr}}
+
+  /* ── 無料 / Pro ── */
+  .plans{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:560px){.plans{grid-template-columns:1fr}}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:18px}
+  .plan.pro{border-color:var(--accent);border-width:1.5px}
+  .plan .pt{font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--ink-faint)}
+  .plan .pp{font-size:20px;font-weight:800;margin-top:4px}
+  .plan ul{margin-top:12px;font-size:14.5px}
+
+  /* ── FAQ ── */
+  details{background:var(--card);border:1px solid var(--line);border-radius:4px;
+    padding:0 18px}
+  details + details{margin-top:10px}
+  summary{cursor:pointer;list-style:none;padding:15px 0;font-weight:700;
+    font-size:16px;line-height:1.5;display:flex;gap:10px;align-items:baseline}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"＋";color:var(--accent);font-weight:700;flex:none;
+    font-size:15px}
+  details[open] summary::before{content:"−"}
+  details[open] summary{border-bottom:1px solid var(--line-soft)}
+  .answer{padding:14px 0 18px;font-size:15px}
+  .answer p + p{margin-top:10px}
+
+  /* ── 注意・法令 ── */
+  .note-law{background:var(--warn-bg);border:1px solid var(--line);
+    border-left:4px solid var(--warn);border-radius:4px;padding:18px;margin-top:12px}
+  .note-law h3{color:var(--ink)}
+  .note-law p,.note-law li{font-size:14.5px;color:var(--ink)}
+
+  /* ── 連絡先 ── */
+  .contact{background:var(--card);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:4px;padding:20px}
+  .contact .mail{font-size:17px;font-weight:700;display:inline-block;margin-top:6px}
+
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-faint);line-height:1.9}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
 </style>
 <meta property="og:title" content="原価ノート — レシピ原価計算・食品表示ラベル">
 <meta property="og:description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出ます。買い切り、サブスクなし。">
@@ -58,137 +233,418 @@
 <link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/">
 </head>
 <body>
+
+<div class="topbar">
+  <div class="inner">
+    <span class="who">原価ノート</span>
+    <span>サポート窓口 <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></span>
+    <span><a href="privacy.html">プライバシーポリシー</a></span>
+  </div>
+</div>
+
 <div class="wrap">
 
   <header>
+    <p class="kicker">お菓子・パンを、自分で売っている人へ</p>
     <h1>原価ノート</h1>
-    <p>レシピを1回入力すると、原価・原価率・売価と、そのまま印刷できる
-       食品表示ラベル（原材料名・栄養成分表示）が同時に出ます。
-       お菓子・パンを個人で販売している方のための道具です。</p>
-    <span class="claim">買い切り。サブスクはありません。</span>
+    <p class="lede">レシピを<strong>1回だけ</strong>入れると、
+      <strong>原価・原価率・売価</strong>と、そのまま印刷できる
+      <strong>食品表示ラベル</strong>（原材料名と栄養成分）が、同時に出ます。</p>
+    <p class="sub">クッキー、焼き菓子、ケーキ、パン、スイーツ。自宅の工房から、委託販売・マルシェ・ネット販売まで。
+      副業ではじめた方から、開業したばかりの製菓・ベーカリーの方まで。iPhone用のアプリです。</p>
+    <p class="price-tag">買い切り ¥1,500 ／ 月額（サブスク）はありません</p>
+
+    <div class="flow" aria-label="レシピを1回入力すると、原価とラベルの2つが出る流れ">
+      <div class="flow-in">
+        <p class="t">入れるのは1回だけ</p>
+        <p class="muted">材料の値段と内容量、配合、出来高（何個できるか）、作業時間。</p>
+      </div>
+      <span class="flow-arrow" aria-hidden="true">▼</span>
+      <div class="flow-out">
+        <div>
+          <p class="t">① 原価と値段</p>
+          <p class="d">材料費・人件費・包装費・販売手数料を全部入れた総原価。1個あたりの原価率と、
+            「この原価率を守るなら、いくらで売るか」の売価。</p>
+        </div>
+        <div>
+          <p class="t">② 食品表示ラベル</p>
+          <p class="d">名称・原材料名（重量の多い順）・アレルゲン・栄養成分表示。
+            A4のラベルシールに面付けしてPDFで書き出せます。</p>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <h2>無料ツール</h2>
-  <div class="card">
-    <div class="pad ok"></div>
-    <div class="body">
+  <!-- ═══ 実例 ═══ -->
+  <section class="sec">
+    <p class="sec-label">まず、数字で</p>
+    <h2>クッキー1枚。材料費 ¥26.6 のはずが、原価は ¥147.6 でした</h2>
+    <p class="muted">型抜きクッキーを30枚焼いて、1枚180円で委託販売（お店に置いてもらう）した場合です。
+      下の数字はすべて、<strong>アプリと同じ計算エンジンを実行して出した実際の値</strong>で、
+      手で打ち込んだものではありません。</p>
+
+    <div class="receipt">
+      <p class="receipt-h">型抜きクッキー ／ 30枚 ／ 1枚あたり</p>
+
+      <div class="row">
+        <span class="k">材料費<br><span class="tiny">卵の殻など捨てる分（歩留まり）と、割れ・端切れ（製造ロス5%）を含む</span></span>
+        <span class="v num">26.6<span class="u">円</span></span>
+      </div>
+      <div class="row">
+        <span class="k">人件費<br><span class="tiny">計量から袋詰めまで90分 × 時給1,100円 ÷ 30枚</span></span>
+        <span class="v num">55.0<span class="u">円</span></span>
+      </div>
+      <div class="row">
+        <span class="k">包装費<br><span class="tiny">OPP袋＋シール</span></span>
+        <span class="v num">12.0<span class="u">円</span></span>
+      </div>
+      <div class="row">
+        <span class="k">販売手数料<br><span class="tiny">委託先に売価の30%</span></span>
+        <span class="v num">54.0<span class="u">円</span></span>
+      </div>
+      <div class="row total">
+        <span class="k">総原価（1枚）</span>
+        <span class="v num">147.6<span class="u">円</span></span>
+      </div>
+
+      <div class="verdict">
+        <span class="readout over num">82.0<span class="u">%</span></span>
+        <span><span class="chip over">原価率が高すぎます</span>
+          <span class="tiny">売価180円のとき。手元に残るのは1枚 ¥32.4</span></span>
+      </div>
+    </div>
+
+    <div class="receipt">
+      <p class="receipt-h">では、いくらで売ればいいのか</p>
+      <p class="muted">原価率を50%までに抑えたい、と決めた場合の売価です。
+        委託の手数料は「売価の30%」なので、売価を上げると手数料も一緒に増えます。
+        だから「原価の2倍」では計算が合いません。</p>
+      <div class="row">
+        <span class="k">直販（マルシェ・イベント・自分のネット販売）<br><span class="tiny">手数料 0%</span></span>
+        <span class="v num">190<span class="u">円</span></span>
+      </div>
+      <div class="row total">
+        <span class="k">委託販売（お店に置いてもらう）<br><span class="tiny">手数料 30%</span></span>
+        <span class="v num">470<span class="u">円</span></span>
+      </div>
+      <p class="tiny" style="margin-top:12px">同じクッキーなのに、直販190円と委託470円で2倍以上ちがいます。
+        委託で売るものと直販で売るものが同じ値段でいいはずがない——
+        これが材料費だけの計算では絶対に見えない結論です。
+        <a href="okashi-genka.html">計算の全部をこの記事で追えます →</a></p>
+    </div>
+  </section>
+
+  <!-- ═══ 4段の積み上げ ═══ -->
+  <section class="sec">
+    <p class="sec-label">なぜ安く出るのか</p>
+    <h2>材料費だけの計算が、現実より安く出る4つの理由</h2>
+    <p class="muted">「よく売れているのに、お金が残らない」の正体はここにあります。
+      1枚180円のクッキーで、足していくとどうなるか。</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-head">
+          <div><p class="step-n">1段目</p><p class="step-t">材料費だけ</p></div>
+          <p class="step-v num">25.0<span class="u">円</span></p>
+        </div>
+        <div class="bar g1"><span style="width:17%"></span></div>
+        <p class="step-d">袋の値段を、使った量で割っただけ。原価率は
+          <span class="step-rate">13.9%</span>。ここで止めてしまう人がいちばん多いところです。</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div><p class="step-n">2段目</p><p class="step-t">＋ 歩留まりと製造ロス</p></div>
+          <p class="step-v num">26.6<span class="u">円</span></p>
+        </div>
+        <div class="bar g2"><span style="width:18%"></span></div>
+        <p class="step-d"><strong>歩留まり</strong>
+          <span class="gloss">＝ 買った量のうち、実際に生地へ入る割合。卵の殻や果物の皮は捨てるので、そのぶん多く買うことになります</span>。
+          <strong>製造ロス</strong>
+          <span class="gloss">＝ 割れ・端切れ・焼き損じで売り物にならなくなる分。この例は5%</span>。
+          買う量は増えるのに、売れる数は増えません。原価率
+          <span class="step-rate">14.8%</span>。</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div><p class="step-n">3段目</p><p class="step-t">＋ 人件費（自分の時間）</p></div>
+          <p class="step-v num">81.6<span class="u">円</span></p>
+        </div>
+        <div class="bar g3"><span style="width:55%"></span></div>
+        <p class="step-d">90分の作業を時給1,100円で数えて、30枚で割ると1枚55円。
+          いちばん大きいのに、いちばん忘れられる費目です。原価率は一気に
+          <span class="step-rate">45.3%</span>へ。
+          原価ノートは人件費を「あとで足すおまけ」ではなく、
+          最初から原価の一部として計算します。</p>
+      </div>
+
+      <div class="step">
+        <div class="step-head">
+          <div><p class="step-n">4段目</p><p class="step-t">＋ 包装費と販売手数料</p></div>
+          <p class="step-v num">147.6<span class="u">円</span></p>
+        </div>
+        <div class="bar g4"><span style="width:100%"></span></div>
+        <p class="step-d">袋とシールで12円、委託先の手数料が売価180円の30%で54円。
+          合計147.6円、原価率<span class="step-rate">82.0%</span>。
+          1枚売って手元に残るのは32.4円で、これは<strong>粗利</strong>
+          <span class="gloss">＝ 売った値段から原価を引いた残り</span>です。</p>
+      </div>
+    </div>
+    <p class="tiny" style="margin-top:12px">数値は
+      <a href="genka-calculator.html">ブラウザで動く原価計算ツール</a>と同じエンジン（アプリの計算コードそのもの）で生成しています。
+      自分のレシピの数字を今すぐ試したい方は、そちらをどうぞ。アプリを入れなくても無料で使えます。</p>
+  </section>
+
+  <!-- ═══ ラベル ═══ -->
+  <section class="sec">
+    <p class="sec-label">いちばん怖いところ</p>
+    <h2>食品表示ラベルは、同じレシピからそのまま出ます</h2>
+    <p class="muted">原材料名を書き出して、多い順に並べ替えて、アレルゲンを拾って、
+      栄養成分を計算して……を手作業でやると、何度やっても不安が残ります。
+      原価を入れたレシピから、そのまま出しました。</p>
+
+    <figure class="shot-hero">
+      <img src="assets/02-label.png" width="640" height="1390" loading="lazy"
+           alt="原価ノートの表示ラベル画面。一括表示の枠に名称・原材料名・内容量・賞味期限・保存方法・製造者が並び、原材料名の末尾に「（一部に小麦・卵・乳を含む）」。下に栄養成分表示（1個当たり）の枠と「この表示値は、目安です。」の一文。">
+      <figcaption>実際の画面です。上が一括表示（食品表示基準 別記様式1）、下が栄養成分表示（別記様式2）。
+        「1個」「100g」の切り替えもここで。</figcaption>
+    </figure>
+
+    <div class="card">
+      <h3>原材料名は、重さの多い順に自動で並びます</h3>
+      <p class="muted">法令が求める並び順です。配合を直せば順番も直ります。
+        仕込み（アーモンドクリームなどの中間レシピ）を使っている場合は、
+        「名称（内訳…）」の形でかっこの中に展開されます。</p>
+    </div>
+    <div class="card">
+      <h3>アレルゲンは「（一部に小麦・卵・乳を含む）」の形にまとまります</h3>
+      <p class="muted">対応は29品目。表示義務のある特定原材料9品目
+        （えび・かに・くるみ・小麦・そば・卵・乳・落花生・カシューナッツ）と、
+        表示がすすめられている20品目です。2026年4月施行の改正で
+        カシューナッツが義務に上がり、ピスタチオが追加された現行のリストに合わせています。</p>
+    </div>
+    <div class="card">
+      <h3>栄養成分は5項目。熱量・たんぱく質・脂質・炭水化物・食塩相当量</h3>
+      <p class="muted">日本食品標準成分表（八訂）から配合量で計算します。成分表はアプリに入っているので、
+        通信はいりません。「1個当たり」と「100g当たり」を切り替えられます。</p>
+    </div>
+    <div class="card">
+      <h3>市販のラベルシールに面付けしてPDFで書き出せます</h3>
+      <p class="muted"><strong>面付け</strong>
+        <span class="gloss">＝ A4の1枚に何枚ぶんを並べて印刷するか</span>。
+        A4・12面（エーワン72212等）、A4・24面（同31540等）、単票の3つ。
+        シールの実寸には栄養成分の枠まで入らないので、
+        <strong>12面・24面は一括表示だけ、栄養成分まで入れるときは単票</strong>という分け方です
+        （実寸で確かめてあります）。
+        印刷するときは倍率100%（原寸）を指定してください。「用紙に合わせる」だと位置がずれます。</p>
+    </div>
+
+    <div class="note-law">
+      <h3>「これ、法律的に大丈夫？」への答え</h3>
+      <p>栄養成分の値は、八訂の成分表から計算した<strong>推定値</strong>です。
+        これは食品表示基準がきちんと認めている方法で、分析機関に検査を出さなくても表示できます。
+        その代わり「この表示値は、目安です。」の一文を近くに書くことが条件なので、
+        アプリは<strong>この一文を必ず枠内に入れます</strong>。消し忘れは起きません。</p>
+      <p>計算の根拠（どのレシピを、どの配合で、どのデータベースから計算したか）は
+        保管しておく必要がありますが、アプリに入れたレシピそのものがその根拠になります。</p>
+      <p>ただし、<strong>表示の最終的な責任は販売者であるあなたにあります</strong>。
+        必要な表示の項目は、販売の形態（対面か、包装して置くか、通信販売か）や
+        自治体によって変わります。売り始める前に、最寄りの保健所に一度確認してください。
+        原価ノートは、計算と印字を手伝う道具に徹しています。</p>
+    </div>
+  </section>
+
+  <!-- ═══ 画面 ═══ -->
+  <section class="sec">
+    <p class="sec-label">ほかの画面</p>
+    <h2>数字が主役の画面です</h2>
+    <p class="muted">飾りは入れていません。原価率は大きく、桁がそろう字で。
+      死守ライン（自分で決めた「ここまで」の原価率）を超えると色が変わります。</p>
+
+    <div class="shots">
+      <figure>
+        <img src="assets/01-cost-breakdown.png" width="480" height="1043" loading="lazy"
+             alt="原価の内訳画面。原価率49.7%が大きく緑で表示され、材料費・人件費・包装費・販売手数料の内訳と、推奨売価490円の逆算が並ぶ。">
+        <figcaption>内訳と売価の逆算。目標の原価率を入れると売価が出ます。</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/03-recipe-list.png" width="480" height="1043" loading="lazy"
+             alt="レシピ一覧画面。ガトーショコラ、ベイクドチーズケーキ、スコーン、米粉マフィン、カヌレが並び、それぞれの原価と売価、原価率のバッジが表示されている。">
+        <figcaption>一覧で原価率を見比べる。赤いものが「値付けを直すべきもの」。</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/05-ingredients.png" width="480" height="1043" loading="lazy"
+             alt="材料一覧画面。アーモンドプードル1,780円/500g、クーベルチュールチョコ1,980円/1000gなど、購入価格とg単価、使用中のレシピ件数が並ぶ。">
+        <figcaption>仕入れの値段はここで一元管理。値上げは1か所直すだけ。</figcaption>
+      </figure>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h3>材料の値段を1か所直すと、その材料を使う全レシピの原価が変わります</h3>
+      <p class="muted">バターが上がった日に、レシピを1本ずつ開いて直す必要はありません。
+        材料画面で1回直せば、そのバターを使っているケーキもクッキーもパンも、
+        原価率と推奨売価がその場で計算し直されます。</p>
+    </div>
+    <div class="card">
+      <h3>Excelで作った材料表は、貼り付けるだけで取り込めます</h3>
+      <p class="muted">表をコピーして、アプリの入力欄に貼るだけ。ファイルの書き出しも、
+        転送も、文字コードの調整もいりません。CSVファイルからの取り込みもできます。
+        <span class="gloss">（どちらも無料の範囲です）</span></p>
+    </div>
+  </section>
+
+  <!-- ═══ 無料とPro ═══ -->
+  <section class="sec" id="price">
+    <p class="sec-label">お金のこと</p>
+    <h2>無料で全部の計算ができます。買い切りは1回だけ</h2>
+
+    <div class="plans">
+      <div class="plan">
+        <p class="pt">無料</p>
+        <p class="pp">¥0</p>
+        <ul>
+          <li>レシピ5件まで（はじめから入っているサンプルは数えません）</li>
+          <li><strong>原価計算は全機能</strong>（歩留まり・製造ロス・人件費・包装費・販売手数料・売価の逆算・原価率の判定）</li>
+          <li>食品表示ラベルの内容はすべて見られます。PDFの書き出しもできますが、「サンプル」の透かしが斜めに入ります</li>
+          <li>材料表の貼り付け取り込み・CSV取り込み</li>
+          <li>iCloud同期・バックアップの書き出しと取り込み</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <p class="pt">原価ノート PRO</p>
+        <p class="pp">¥1,500 <span class="muted" style="font-weight:600">買い切り</span></p>
+        <ul>
+          <li>レシピ数の制限がなくなります</li>
+          <li>ラベルPDFの<strong>透かしが消えます</strong>。そのまま印刷して商品に貼れます</li>
+          <li>レシピ一覧CSV・材料CSVの書き出し（総原価・原価率・粗利までの列。会計や棚卸にそのまま貼れます）</li>
+          <li>一度買えば終わり。期限も月額もありません</li>
+        </ul>
+      </div>
+    </div>
+    <p class="tiny" style="margin-top:12px">食品表示の法令は変わります。改正への追従は、
+      月額をいただくのではなく<strong>無料のアップデート</strong>で行う方針です。</p>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="sec">
+    <p class="sec-label">よくある質問</p>
+    <h2>困ったとき</h2>
+
+    <details>
+      <summary>買ったのに、無料版のままです</summary>
+      <div class="answer">
+        <p>購入したときと同じApple IDでサインインした状態で、
+          <strong>設定タブ →「Pro」の「Proを購入 / 復元」→「以前の購入を復元」</strong>
+          を押してください。</p>
+        <p>購入はApple IDに紐づいているので、機種変更しても、アプリを入れ直しても引き継がれます。
+          追加の料金はかかりません。それでも戻らない場合は、下の連絡先へご連絡ください。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>原価はどういう式で計算されていますか</summary>
+      <div class="answer">
+        <p>総原価（1個あたり）＝ 材料費 ＋ 人件費 ＋ 包装費 ＋ 販売手数料 です。</p>
+        <p>材料費は「購入価格 ÷ 内容量 × 使う量 ÷ 歩留まり率」を全部の材料で足し、
+          それを「1 − 製造ロス率」で割ります。人件費は「作業分 ÷ 60 × 時給」。
+          販売手数料は「手数料率 × 売価」なので、売価を上げると手数料も増えます。</p>
+        <p>売価の逆算は「（材料費 ＋ 人件費 ＋ 包装費）÷（目標の原価率 − 手数料率）」。
+          手数料率が目標の原価率以上だと答えが存在しないので、その場合はその旨を出します。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>ラベルの栄養成分表示は、そのまま商品に貼れますか</summary>
+      <div class="answer">
+        <p>栄養成分の値は、文部科学省「日本食品標準成分表（八訂）」から計算した<strong>推定値</strong>です。
+          食品表示基準が認めている方法で、「この表示値は、目安です。」が常に併記されるので、
+          分析機関に出さなくても適法に表示できる形になっています。</p>
+        <p>ただし<strong>表示の最終責任は販売者（あなた）にあります</strong>。
+          販売の形態によって必要な表示は変わりますので、迷ったら最寄りの保健所や
+          消費生活センターに確認してください。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>アレルゲンは自動で判定してくれますか</summary>
+      <div class="answer">
+        <p>いいえ。<strong>アレルゲンは、材料ごとにあなたが設定した内容がそのままラベルに反映されます。</strong>
+          アプリが材料名から推測することはありません。</p>
+        <p>原材料の袋に書かれている表示を見て、材料画面で設定してください。
+          設定した内容は、その材料を使う全レシピのラベルに反映されます。
+          なお、材料CSVの取り込みではアレルゲンは変わりません（材料画面で設定します）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>通信やアカウント登録は必要ですか</summary>
+      <div class="answer">
+        <p>いりません。アカウント登録はなく、計算はすべてiPhoneの中で動きます。
+          八訂の成分表もアプリに入っています。通信を使うのは、App Storeでの購入処理と、
+          あなた自身のiCloudへの同期だけです。工房に電波が入らなくても計算できます。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>機種変更やデータの控えはどうなりますか</summary>
+      <div class="answer">
+        <p>レシピ・材料・時給の設定は、同じApple IDのiCloudへ自動で保存されます（無料）。
+          新しいiPhoneでアプリを入れて、設定タブの「今すぐ同期」を押せば戻ります。</p>
+        <p>iCloudの中でも、開発者からは見えない・触れないあなた専用の領域に置かれます。
+          念のため、設定タブから「バックアップを書き出す」でファイルとして控えておくこともできます。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>計算がおかしい気がします</summary>
+      <div class="answer">
+        <p>ぜひ教えてください。<strong>材料の購入価格・内容量・配合量と、
+          アプリに出ている値</strong>を書いて送っていただければ、手計算と突き合わせて確認します。</p>
+        <p>いちばん多いのは、材料の単位（g・ml・個）が配合の単位と食い違っている場合と、
+          歩留まり率が100%以外に設定されている場合です。</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ═══ サポート ═══ -->
+  <section class="sec" id="support">
+    <p class="sec-label">サポート</p>
+    <h2>連絡先</h2>
+    <div class="contact">
+      <p>質問・不具合の報告・計算や表示の指摘は、こちらへどうぞ。</p>
+      <p><a class="mail" href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></p>
+      <p class="tiny">個人で作っています。全部読みます。返信に1〜2日いただくことがあります。
+        「こういう表示項目が要るのに出せない」「この材料の八訂の食品番号が分からない」など、
+        使っていて詰まったことも歓迎です。</p>
+      <p class="tiny"><a href="privacy.html">プライバシーポリシー</a>（何も収集していません）</p>
+    </div>
+  </section>
+
+  <!-- ═══ 読みもの ═══ -->
+  <section class="sec">
+    <p class="sec-label">無料で読める・使える</p>
+    <h2>アプリを入れる前に</h2>
+    <div class="card">
       <h3><a href="genka-calculator.html">レシピ原価計算ツール（ブラウザで動く・無料）</a></h3>
-      <p>材料と出来高を入れるだけで、1個あたりの原価・原価率・おすすめ売価が出ます。
-         製造ロス・人件費・販売手数料まで入った、アプリと同じ計算エンジンです。</p>
+      <p class="muted">材料と出来高（何個できるか）を入れるだけで、1個あたりの原価・原価率・
+        おすすめの売価が出ます。製造ロス・人件費・販売手数料まで入った、アプリと同じ計算です。
+        インストールも登録も不要です。</p>
     </div>
-  </div>
-
-  <h2>ガイド</h2>
-  <div class="card">
-    <div class="pad low"></div>
-    <div class="body">
+    <div class="card">
       <h3><a href="okashi-genka.html">お菓子の原価計算のやり方 — クッキー1枚で全部の数字を出す</a></h3>
-      <p class="muted">材料費だけの計算が現実より安く出る4つの理由（歩留まり・製造ロス・
-         人件費・委託手数料）を、実例で最後まで計算します。数値はアプリと同じ
-         計算エンジンから生成しています。</p>
+      <p class="muted">このページに出てきた4つの理由（歩留まり・製造ロス・人件費・委託手数料）を、
+        材料の表から売価の逆算まで、一つも飛ばさずに計算します。
+        値付けに迷っている方はこちらから。</p>
     </div>
-  </div>
-
-  <h2 id="support">サポート</h2>
-  <div class="card">
-    <div class="pad accent"></div>
-    <div class="body">
-      <h3>連絡先</h3>
-      <p>質問・不具合報告・計算や表示の指摘はこちらへ:
-         <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></p>
-      <p class="muted">個人で開発しています。全部読みます。返信は1〜2日いただくことがあります。
-         計算がおかしいと思ったら、材料の価格・内容量・配合量とアプリの表示値を
-         書いて送ってください。手計算と突き合わせて確認します。</p>
-    </div>
-  </div>
-
-  <h2>よくある質問</h2>
-
-  <div class="card">
-    <div class="pad ok"></div>
-    <div class="body">
-      <h3>無料でどこまで使えますか？</h3>
-      <p>レシピ5件まで、原価計算の全機能（歩留・製造ロス・人件費・包装費・販売手数料・
-         売価と原価率の判定）、材料CSVの取り込み、iCloud同期が無料です。
-         食品表示ラベルは透かし付きのプレビューまで見られます。</p>
-      <p>買い切りの「原価ノート Pro」を購入すると、レシピ無制限・ラベルPDFの透かしなし出力・
-         CSV書き出しが使えます。一度買えば終わりで、期限はありません。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="pad accent"></div>
-    <div class="body">
-      <h3>購入したのに無料版のままです</h3>
-      <p>購入時と同じApple IDでサインインした状態で、
-         <strong>設定 → 原価ノート Pro → 以前の購入を復元</strong> をタップしてください。
-         購入はApple IDに紐づくので、機種変更しても引き継がれます。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="pad low"></div>
-    <div class="body">
-      <h3>原価はどう計算されていますか？</h3>
-      <p>総原価 = 材料費（歩留・製造ロス込み）+ 人件費（作業時間 × 時給・任意）+
-         包装費 + 販売手数料。1個あたりに割って、売価に対する原価率と、
-         あなたが決めた「死守原価率」との判定を出します。</p>
-      <p>材料の値段を変えると、その材料を使う全レシピの原価が自動で再計算されます。
-         値上げのたびに全部を直す作業はいりません。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="pad high"></div>
-    <div class="body">
-      <h3>ラベルの栄養成分表示は、そのまま使えますか？</h3>
-      <p>アプリの栄養成分表示は、文部科学省「日本食品標準成分表（八訂）」から計算した
-         <strong>推定値</strong>です。食品表示基準で認められている方法で、ラベルには
-         「この表示値は、目安です。」が常に併記されます。分析機関に出さなくても
-         適法に表示できる形です。</p>
-      <p>ただし<strong>表示の最終責任は販売者（あなた）にあります</strong>。
-         販売形態によって必要な表示は変わるので、迷ったら最寄りの保健所・
-         消費生活センターに確認してください。アプリは計算と印字の補助に徹します。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="pad ok"></div>
-    <div class="body">
-      <h3>通信やアカウントは必要ですか？</h3>
-      <p>いいえ。アカウント登録はなく、計算はすべて端末の中で動きます。
-         八訂成分表もアプリに同梱しています。通信を使うのは、App Storeでの購入処理と、
-         あなた自身のiCloudへの同期だけです。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="pad accent"></div>
-    <div class="body">
-      <h3>機種変更やデータの控えは？</h3>
-      <p>レシピ・材料・設定は同じApple IDのiCloudに自動で同期されます。
-         新しいiPhoneでアプリを入れて「今すぐ同期」を押せば戻ります。
-         設定からバックアップファイルの書き出し・取り込みもできます。</p>
-    </div>
-  </div>
-
-  <h2>だいじな注意</h2>
-  <div class="card">
-    <div class="pad high"></div>
-    <div class="body">
-      <h3>食品表示・アレルゲンについて</h3>
-      <ul>
-        <li>アレルゲン（29品目）は材料ごとにあなたが設定した内容がラベルに反映されます。
-            原材料の袋の表示を確認して設定してください。</li>
-        <li>栄養成分は推定値です。「100gあたり」表示には出来高総量の入力が必要です。</li>
-        <li>営業許可・施設基準・必要な表示項目は自治体・販売形態で異なります。
-            販売前に保健所へ確認することをおすすめします。</li>
-      </ul>
-    </div>
-  </div>
+  </section>
 
   <footer>
-    © 2026 Nobutaka Kawasaki · <a href="privacy.html">プライバシーポリシー</a>
+    © 2026 Nobutaka Kawasaki<br>
+    <a href="privacy.html">プライバシーポリシー</a> ·
+    <a href="mailto:nosunosukawa@gmail.com">サポート窓口</a><br>
+    <span>掲載の数値は、アプリと同じ計算コードを実行して生成した例です。
+      食品表示の最終的な責任は販売者にあります。</span>
   </footer>
 
 </div>

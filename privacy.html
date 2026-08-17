@@ -6,49 +6,85 @@
 <title>原価ノート — プライバシーポリシー</title>
 <meta name="description" content="原価ノートは何も収集しません。アカウントなし、解析なし、広告なし、開発者のサーバーなし。データは端末とあなた自身のiCloudの中だけにあります。">
 <style>
-  /* index.html と同じトークン（アプリ本体の src/ui/theme.ts 由来） */
+  /* index.html と同じ「厨房のノート」の地・罫・字組 */
   :root{
-    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
-    --accent:#2B4A78; --ok:#1F7A45; --line:#D9DCD6;
+    --paper:#FAF6EE; --paper-rule:rgba(22,24,29,.055); --card:#FFFDF8;
+    --ink:#16181D; --ink-soft:#5A5347; --ink-faint:#6E6659;
+    --line:#DED5C4; --line-soft:#EBE3D4;
+    --accent:#2B4A78; --ok:#1F7A45;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
-      --accent:#8FAAD1; --ok:#55A578; --line:#2E3238;
+      --paper:#15171B; --paper-rule:rgba(232,234,237,.05); --card:#1D2025;
+      --ink:#EAECEF; --ink-soft:#A9A296; --ink-faint:#9A9386;
+      --line:#33373D; --line-soft:#2A2E33;
+      --accent:#9DB7DC; --ok:#6FBE90;
     }
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);
+  html{-webkit-text-size-adjust:100%}
+  body{background-color:var(--paper);
+    background-image:repeating-linear-gradient(
+      to bottom, transparent 0, transparent 33px,
+      var(--paper-rule) 33px, var(--paper-rule) 34px);
+    color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.7;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:680px;margin:0 auto}
-  header{margin:20px 0 30px}
-  h1{font-size:28px;line-height:1.2;letter-spacing:-.4px;font-weight:800}
-  .lead{margin-top:14px;font-size:17px;line-height:1.6;font-weight:600}
-  .date{margin-top:10px;font-size:13px;color:var(--ink-soft)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:20px;display:flex;gap:14px;align-items:stretch}
-  .card + .card{margin-top:10px}
-  .pad{width:5px;border-radius:2.5px;flex:none;background:var(--ok)}
-  .body{flex:1}
-  .card h2{font-size:16px;margin-bottom:6px;letter-spacing:-.2px}
+    font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased;
+    overflow-wrap:anywhere}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 72px}
+  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:10px 16px}
+  .topbar .inner{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;
+    gap:4px 16px;align-items:baseline;font-size:13.5px;line-height:1.6}
+  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink)}
+  header{padding:34px 0 8px}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--ink-faint)}
+  h1{font-size:clamp(24px,6.5vw,32px);line-height:1.2;letter-spacing:-.02em;
+     font-weight:800;margin-top:8px}
+  .lead{margin-top:14px;font-size:17px;line-height:1.75;font-weight:600}
+  .date{margin-top:10px;font-size:13px;color:var(--ink-faint)}
+  .cards{margin-top:28px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:4px;
+    padding:18px;display:flex;gap:14px;align-items:stretch}
+  .card + .card{margin-top:12px}
+  .pad{width:3px;border-radius:2px;flex:none;background:var(--ok)}
+  .body{flex:1;min-width:0}
+  .card h2{font-size:16.5px;line-height:1.5;margin-bottom:6px;letter-spacing:-.01em}
   .card p{font-size:15px}
-  .card p + p{margin-top:8px}
-  a{color:var(--accent);font-weight:600;text-decoration:none}
-  a:hover{text-decoration:underline}
-  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+  .card p + p{margin-top:10px}
+  a{color:var(--accent);font-weight:600;text-decoration:none;
+    text-decoration-line:underline;text-decoration-thickness:1px;
+    text-underline-offset:3px;text-decoration-color:var(--line)}
+  a:hover{text-decoration-color:currentColor}
+  a:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:3px}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);
+    color:var(--ink-faint);font-size:13px;line-height:1.9}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
 </style>
 <link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/privacy.html">
 </head>
 <body>
+
+<div class="topbar">
+  <div class="inner">
+    <span class="who">原価ノート</span>
+    <span>サポート窓口 <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></span>
+    <span><a href="index.html">サポートページ</a></span>
+  </div>
+</div>
+
 <div class="wrap">
 
   <header>
+    <p class="kicker">お菓子・パンの原価計算と食品表示ラベル</p>
     <h1>原価ノート プライバシーポリシー</h1>
     <p class="lead">原価ノートは何も収集しません。アカウントも、解析も、広告も、
        開発者のサーバーもありません。</p>
     <p class="date">最終更新: 2026年8月</p>
   </header>
+
+  <div class="cards">
 
   <div class="card">
     <div class="pad"></div>
@@ -112,8 +148,12 @@
     </div>
   </div>
 
+  </div>
+
   <footer>
-    © 2026 Nobutaka Kawasaki · <a href="index.html">サポート</a>
+    © 2026 Nobutaka Kawasaki<br>
+    <a href="index.html">サポートページ</a> ·
+    <a href="mailto:nosunosukawa@gmail.com">サポート窓口</a>
   </footer>
 
 </div>
