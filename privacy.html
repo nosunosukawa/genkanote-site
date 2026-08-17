@@ -3,63 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F1F3F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101416" media="(prefers-color-scheme: dark)">
 <title>原価ノート — プライバシーポリシー</title>
 <meta name="description" content="原価ノートは何も収集しません。アカウントなし、解析なし、広告なし、開発者のサーバーなし。データは端末とあなた自身のiCloudの中だけにあります。">
 <style>
-  /* index.html と同じ「厨房のノート」の地・罫・字組 */
+  /* index.html / support.html と同じ「作業台に置いた紙」の地・字組 */
   :root{
-    --paper:#FAF6EE; --paper-rule:rgba(22,24,29,.055); --card:#FFFDF8;
-    --ink:#16181D; --ink-soft:#5A5347; --ink-faint:#6E6659;
-    --line:#DED5C4; --line-soft:#EBE3D4;
-    --accent:#2B4A78; --ok:#1F7A45;
+    color-scheme:light;
+    --sheet:#F1F3F2; --paper:#FFFFFF;
+    --ink:#14181A; --ink-2:#4E585C; --ink-3:#5F6B6F;
+    --line:#C9D2D3; --line-soft:#E1E6E5;
+    --steel:#2E4B57; --ok:#1F7A45;
+    --f-display:"Hiragino Mincho ProN","Hiragino Mincho Pro","YuMincho","Yu Mincho",
+      "Noto Serif JP","Times New Roman",serif;
+    --f-text:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN",
+      "Yu Gothic UI","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --f-soft:"Hiragino Maru Gothic ProN","Hiragino Maru Gothic Pro","Yu Gothic UI",
+      "Hiragino Sans",sans-serif;
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --paper:#15171B; --paper-rule:rgba(232,234,237,.05); --card:#1D2025;
-      --ink:#EAECEF; --ink-soft:#A9A296; --ink-faint:#9A9386;
-      --line:#33373D; --line-soft:#2A2E33;
-      --accent:#9DB7DC; --ok:#6FBE90;
+      color-scheme:dark;
+      --sheet:#101416; --paper:#1B2124;
+      --ink:#E8ECEC; --ink-2:#A2ADB0; --ink-3:#95A0A3;
+      --line:#39423F; --line-soft:#2A3134;
+      --steel:#93B7C6; --ok:#6FBE90;
     }
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
-  body{background-color:var(--paper);
-    background-image:repeating-linear-gradient(
-      to bottom, transparent 0, transparent 33px,
-      var(--paper-rule) 33px, var(--paper-rule) 34px);
+  body{background:var(--sheet);
     color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased;
+    font-family:var(--f-text);
+    font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased;
     overflow-wrap:anywhere}
-  .wrap{max-width:720px;margin:0 auto;padding:0 16px 72px}
-  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:0 16px}
-  .topbar .inner{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;
-    gap:4px 16px;align-items:baseline;font-size:13.5px;line-height:1.6}
-  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink);padding:11px 0}
-  .topbar a{display:inline-block;padding:11px 0}
-  header{padding:34px 0 8px}
-  .kicker{font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--ink-faint)}
-  h1{font-size:clamp(24px,6.5vw,32px);line-height:1.2;letter-spacing:-.02em;
-     font-weight:800;margin-top:8px}
-  .lead{margin-top:14px;font-size:17px;line-height:1.75;font-weight:600}
-  .date{margin-top:10px;font-size:13px;color:var(--ink-faint)}
+  .wrap{max-width:700px;margin:0 auto;padding:0 16px 64px}
+  /* 本文へ飛ぶリンク。ふだんは見えず、Tab で最初に出る */
+  .skip{position:absolute;left:-9999px;top:0;z-index:9}
+  .skip:focus{left:8px;top:8px;background:var(--paper);color:var(--steel);
+    padding:12px 14px;border:2px solid var(--steel);border-radius:4px;
+    font-weight:700;text-decoration:none}
+
+  .topbar{border-bottom:1px solid var(--line);background:var(--paper);padding:0 16px}
+  .topbar .inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;
+    gap:0 18px;align-items:baseline;font-size:13.5px;line-height:1.6}
+  .topbar .who{font-family:var(--f-display);font-size:15px;font-weight:700;
+    letter-spacing:.08em;color:var(--ink);padding:11px 0}
+  .topbar a{display:inline-block;padding:12px 0;min-width:0}
+  header{padding:32px 0 0}
+  .kicker{font-family:var(--f-soft);font-size:12px;font-weight:500;letter-spacing:.14em;
+    color:var(--ink-3)}
+  /* 明朝は細い。サイズと字間で視認性を作る */
+  h1{font-family:var(--f-display);font-size:clamp(26px,5.8vw,36px);line-height:1.45;
+     letter-spacing:.03em;font-weight:700;margin-top:10px;text-wrap:balance}
+  .lead{margin-top:14px;font-size:17px;line-height:1.8;font-weight:600}
+  .date{margin-top:10px;font-family:var(--f-soft);font-size:13px;color:var(--ink-3)}
   .cards{margin-top:28px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:4px;
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:4px;
     padding:18px;display:flex;gap:14px;align-items:stretch}
   .card + .card{margin-top:12px}
   .pad{width:3px;border-radius:2px;flex:none;background:var(--ok)}
   .body{flex:1;min-width:0}
-  .card h2{font-size:16.5px;line-height:1.5;margin-bottom:6px;letter-spacing:-.01em}
-  .card p{font-size:15px}
+  .card h2{font-family:var(--f-display);font-size:19.5px;line-height:1.55;
+    margin-bottom:6px;letter-spacing:.03em;font-weight:700}
+  .card p{font-size:15px;color:var(--ink-2)}
   .card p + p{margin-top:10px}
-  a{color:var(--accent);font-weight:600;text-decoration:none;
-    text-decoration-line:underline;text-decoration-thickness:1px;
+  a{color:var(--steel);font-weight:600;text-decoration:underline;
+    text-decoration-thickness:1px;
     text-underline-offset:3px;text-decoration-color:currentColor}
+  a,summary{touch-action:manipulation}
   a:hover{text-decoration-thickness:2px}
-  a:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:3px}
-  footer{margin-top:48px;padding-top:12px;border-top:1px solid var(--line);
-    color:var(--ink-faint);font-size:13px;line-height:1.9}
-  footer a{display:inline-block;padding:10px 0}
+  a:focus-visible{outline:2.5px solid var(--steel);outline-offset:3px;border-radius:3px}
+  footer{margin-top:48px;padding-top:8px;border-top:1px solid var(--line);
+    font-family:var(--f-soft);color:var(--ink-3);font-size:12.5px;line-height:1.9}
+  footer a{display:inline-block;padding:11px 0}
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   }
@@ -68,15 +86,18 @@
 </head>
 <body>
 
+<a class="skip" href="#main">本文へ</a>
+
 <div class="topbar">
   <div class="inner">
-    <span class="who">原価ノート</span>
-    <span>サポート窓口 <a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></span>
-    <span><a href="index.html">サポートページ</a></span>
+    <span class="who" translate="no">原価ノート</span>
+    <span><a href="index.html">トップ</a></span>
+    <span><a href="support.html">使い方とFAQ</a></span>
+    <span><a href="mailto:nosunosukawa@gmail.com">nosunosukawa@gmail.com</a></span>
   </div>
 </div>
 
-<div class="wrap">
+<main class="wrap" id="main">
 
   <header>
     <p class="kicker">お菓子・パンの原価計算と食品表示ラベル</p>
@@ -125,7 +146,7 @@
     <div class="pad"></div>
     <div class="body">
       <h2>栄養成分の計算</h2>
-      <p>栄養成分表示の計算に使う「日本食品標準成分表（八訂）」はアプリに同梱されており、
+      <p>栄養成分表示の計算に使う「日本食品標準成分表（八訂）増補2023年」はアプリに同梱されており、
          計算はすべて端末内で行われます。レシピの内容が外部に送信されることはありません。</p>
     </div>
   </div>
@@ -154,10 +175,11 @@
 
   <footer>
     © 2026 Nobutaka Kawasaki<br>
-    <a href="index.html">サポートページ</a> ·
+    <a href="index.html">トップ</a> ·
+    <a href="support.html">使い方とFAQ</a> ·
     <a href="mailto:nosunosukawa@gmail.com">サポート窓口</a>
   </footer>
 
-</div>
+</main>
 </body>
 </html>
