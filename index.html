@@ -65,16 +65,17 @@
 
   a{color:var(--accent);font-weight:600;text-decoration:none;
     text-decoration-line:underline;text-decoration-thickness:1px;
-    text-underline-offset:3px;text-decoration-color:var(--line)}
-  a:hover{text-decoration-color:currentColor}
+    text-underline-offset:3px;text-decoration-color:currentColor}
+  a:hover{text-decoration-thickness:2px}
   a:focus-visible,summary:focus-visible{outline:2.5px solid var(--accent);
     outline-offset:3px;border-radius:3px}
 
   /* ── 上部の帯: App Store 必須URL。スクロールせずに見つかること ── */
-  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:10px 16px}
+  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:0 16px}
   .topbar .inner{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;
     gap:4px 16px;align-items:baseline;font-size:13.5px;line-height:1.6}
-  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink)}
+  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink);padding:11px 0}
+  .topbar a{display:inline-block;padding:11px 0}
   .topbar .sep{color:var(--ink-faint)}
 
   /* ── ヘッダー ── */
@@ -219,8 +220,9 @@
     border-left:4px solid var(--accent);border-radius:4px;padding:20px}
   .contact .mail{font-size:17px;font-weight:700;display:inline-block;margin-top:6px}
 
-  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+  footer{margin-top:56px;padding-top:12px;border-top:1px solid var(--line);
     font-size:13px;color:var(--ink-faint);line-height:1.9}
+  footer a{display:inline-block;padding:10px 0}
 
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -254,7 +256,7 @@
       副業ではじめた方から、開業したばかりの製菓・ベーカリーの方まで。iPhone用のアプリです。</p>
     <p class="price-tag">買い切り ¥1,500 ／ 月額（サブスク）はありません</p>
 
-    <div class="flow" aria-label="レシピを1回入力すると、原価とラベルの2つが出る流れ">
+    <div class="flow" role="group" aria-label="レシピを1回入力すると、原価とラベルの2つが出る流れ">
       <div class="flow-in">
         <p class="t">入れるのは1回だけ</p>
         <p class="muted">材料の値段と内容量、配合、出来高（何個できるか）、作業時間。</p>

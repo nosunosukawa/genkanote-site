@@ -32,10 +32,11 @@
     font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased;
     overflow-wrap:anywhere}
   .wrap{max-width:720px;margin:0 auto;padding:0 16px 72px}
-  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:10px 16px}
+  .topbar{border-bottom:1px solid var(--line);background:var(--card);padding:0 16px}
   .topbar .inner{max-width:720px;margin:0 auto;display:flex;flex-wrap:wrap;
     gap:4px 16px;align-items:baseline;font-size:13.5px;line-height:1.6}
-  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink)}
+  .topbar .who{font-weight:700;letter-spacing:.02em;color:var(--ink);padding:11px 0}
+  .topbar a{display:inline-block;padding:11px 0}
   header{padding:34px 0 8px}
   .kicker{font-size:12px;font-weight:700;letter-spacing:.18em;color:var(--ink-faint)}
   h1{font-size:clamp(24px,6.5vw,32px);line-height:1.2;letter-spacing:-.02em;
@@ -53,11 +54,12 @@
   .card p + p{margin-top:10px}
   a{color:var(--accent);font-weight:600;text-decoration:none;
     text-decoration-line:underline;text-decoration-thickness:1px;
-    text-underline-offset:3px;text-decoration-color:var(--line)}
-  a:hover{text-decoration-color:currentColor}
+    text-underline-offset:3px;text-decoration-color:currentColor}
+  a:hover{text-decoration-thickness:2px}
   a:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:3px}
-  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);
+  footer{margin-top:48px;padding-top:12px;border-top:1px solid var(--line);
     color:var(--ink-faint);font-size:13px;line-height:1.9}
+  footer a{display:inline-block;padding:10px 0}
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   }
