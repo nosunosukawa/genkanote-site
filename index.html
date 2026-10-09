@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#F1F3F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101416" media="(prefers-color-scheme: dark)">
 <title>原価ノート — お菓子・パンの原価計算と食品表示ラベルが1つで済むアプリ</title>
-<meta name="description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出る、お菓子・パンの個人販売者向けアプリのサポートページ。">
+<meta name="description" content="原価ノートは、原価計算と食品表示ラベルを1つでできる、お菓子・パンの個人販売者向け iPhone アプリ。レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・アレルゲン・栄養成分）が同時に出ます。">
 <style>
   /* ───────────────────────────────────────────────
      「作業台に置いた、二枚の紙」
@@ -218,12 +218,90 @@
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   }
+  /* ── App Store へのリンク・よくある質問（2026-10-10） ── */
+  .getnote{margin-top:8px;font-family:var(--f-soft);font-size:12.5px;color:var(--ink-3)}
+  .faq{margin-top:18px;border-top:1px solid var(--line)}
+  .faq h3{padding-top:18px;margin-top:0}
+  .faq p{margin-top:6px;padding-bottom:18px;border-bottom:1px solid var(--line-soft);
+    font-size:15.5px;line-height:1.85;color:var(--ink-2)}
 </style>
 <meta property="og:title" content="原価ノート — レシピ原価計算・食品表示ラベル">
 <meta property="og:description" content="レシピを1回入力すると、原価・原価率・売価と食品表示ラベル（原材料名・栄養成分）が同時に出ます。">
 <meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/">
+<meta name="apple-itunes-app" content="app-id=6799887510">
+<!-- 構造化データ（2026-10-10）。価格・評価・会社名は入れない。FAQPage は下の「よくある質問」と同じ文面にする -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "MobileApplication",
+ "name": "原価ノート",
+ "operatingSystem": "iOS",
+ "applicationCategory": "BusinessApplication",
+ "description": "お菓子・パンを個人で売る人のための iPhone アプリ。レシピを1回入れると、原価・原価率・売価と食品表示ラベル（原材料名・アレルゲン・栄養成分）が同時に出ます。人件費・包装費・販売手数料・歩留まりまで含めて計算し、ラベルは市販のシールに面付けして PDF で書き出せます。",
+ "url": "https://nosunosukawa.github.io/genkanote-site/",
+ "installUrl": "https://apps.apple.com/jp/app/id6799887510",
+ "inLanguage": "ja"
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "inLanguage": "ja",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "原価計算と食品表示ラベルを両方できるアプリは？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "原価ノートは、お菓子・パンを個人で売る人のための iPhone アプリです。レシピを1回入れると、同じレシピから原価・原価率・売価と、食品表示ラベル（原材料名・アレルゲン・栄養成分）が出ます。材料の値段は材料画面で1か所直せば、その材料を使う全レシピの原価が計算し直されます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "お菓子の原価に、人件費や販売手数料まで入れて計算できますか？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "できます。1個あたりの総原価は、材料費・人件費・包装費・販売手数料の合計です。材料費には歩留まりと製造ロスも入ります。人件費は作業時間と時給から、販売手数料は売価に対する率で計算し、目標の原価率から売価を逆算します（10円単位で切り上げ）。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "食品表示の原材料名やアレルゲンは自動で作れますか？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "原材料名は重さの多い順に自動で並び、仕込み（中間レシピ）はかっこの中に展開されます。アレルゲンは、材料ごとに自分で設定した内容が「（一部に小麦・卵・乳を含む）」の形にまとまります。アプリが材料名からアレルゲンを推測することはありません。対応しているのは、表示義務のある9品目と、表示がすすめられている20品目の29品目です。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "栄養成分表示はどうやって計算されますか？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "文部科学省「日本食品標準成分表（八訂）増補2023年」から、配合量で熱量・たんぱく質・脂質・炭水化物・食塩相当量を計算します。計算した値は推定値なので、ラベルには「この表示値は、目安です。」の一文が必ず入ります。表示の最終的な責任は販売者にあり、必要な表示は販売の形態や自治体で変わるため、売り始める前に保健所に確認してください。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "食品表示ラベルをシールに印刷できますか？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "市販のラベルシールに面付けして PDF で書き出せます。A4・12面、A4・24面、単票のほか、焼いた日に何品でもA4にまとめる形と、62mm幅のラベルプリンター用があります。12面・24面は一括表示だけで、栄養成分まで入れるときは単票を使います。ラベルの PDF 書き出しは Pro の機能です。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "通信やアカウント登録は必要ですか？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "いりません。計算はすべて iPhone の中で動き、成分表もアプリに入っています。通信を使うのは App Store での購入処理と、自分の iCloud への同期だけです。iPhone 用（iOS 16 以降）で、表示は日本語です。"
+   }
+  }
+ ]
+}
+</script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "da30c37073e746159a379341e417854d"}'></script>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -238,6 +316,7 @@
     <span><a href="support.html">使い方とFAQ</a></span>
     <span><a href="mailto:nosunosukawa@gmail.com">メール</a></span>
     <span><a href="privacy.html">プライバシー</a></span>
+    <span><a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store</a></span>
   </div>
 </div>
 
@@ -304,8 +383,10 @@
     <h1 class="measure">1枚180円のクッキー。原価は147.6円でした</h1>
     <p class="lede measure">レシピを1回入れると、原価と食品表示ラベルが同時に出ます。</p>
     <div class="actions">
-      <a class="btn" href="genka-calculator.html">ブラウザで自分のレシピを試す</a>
+      <a class="btn" href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a>
+      <a class="btn ghost" href="genka-calculator.html">ブラウザで自分のレシピを試す</a>
     </div>
+    <p class="getnote">iPhone 用（iOS 16 以降）。</p>
   </header>
 
   <!-- ═══ 積み上げ ═══ -->
@@ -414,6 +495,25 @@
     <p class="tiny">月額（はじめての方は無料体験つき）・年額・買い切りから選べます。価格はアプリ内と<span translate="no">App&nbsp;Store</span>でご確認ください。</p>
   </section>
 
+  <!-- ═══ よくある質問（2026-10-10。文面は <head> の FAQPage と同じ） ═══ -->
+  <section class="sec" id="faq">
+    <h2>よくある質問</h2>
+    <div class="faq measure">
+      <h3>原価計算と食品表示ラベルを両方できるアプリは？</h3>
+      <p>原価ノートは、お菓子・パンを個人で売る人のための iPhone アプリです。レシピを1回入れると、同じレシピから原価・原価率・売価と、食品表示ラベル（原材料名・アレルゲン・栄養成分）が出ます。材料の値段は材料画面で1か所直せば、その材料を使う全レシピの原価が計算し直されます。</p>
+      <h3>お菓子の原価に、人件費や販売手数料まで入れて計算できますか？</h3>
+      <p>できます。1個あたりの総原価は、材料費・人件費・包装費・販売手数料の合計です。材料費には歩留まりと製造ロスも入ります。人件費は作業時間と時給から、販売手数料は売価に対する率で計算し、目標の原価率から売価を逆算します（10円単位で切り上げ）。</p>
+      <h3>食品表示の原材料名やアレルゲンは自動で作れますか？</h3>
+      <p>原材料名は重さの多い順に自動で並び、仕込み（中間レシピ）はかっこの中に展開されます。アレルゲンは、材料ごとに自分で設定した内容が「（一部に小麦・卵・乳を含む）」の形にまとまります。アプリが材料名からアレルゲンを推測することはありません。対応しているのは、表示義務のある9品目と、表示がすすめられている20品目の29品目です。</p>
+      <h3>栄養成分表示はどうやって計算されますか？</h3>
+      <p>文部科学省「日本食品標準成分表（八訂）増補2023年」から、配合量で熱量・たんぱく質・脂質・炭水化物・食塩相当量を計算します。計算した値は推定値なので、ラベルには「この表示値は、目安です。」の一文が必ず入ります。表示の最終的な責任は販売者にあり、必要な表示は販売の形態や自治体で変わるため、売り始める前に保健所に確認してください。</p>
+      <h3>食品表示ラベルをシールに印刷できますか？</h3>
+      <p>市販のラベルシールに面付けして PDF で書き出せます。A4・12面、A4・24面、単票のほか、焼いた日に何品でもA4にまとめる形と、62mm幅のラベルプリンター用があります。12面・24面は一括表示だけで、栄養成分まで入れるときは単票を使います。ラベルの PDF 書き出しは Pro の機能です。</p>
+      <h3>通信やアカウント登録は必要ですか？</h3>
+      <p>いりません。計算はすべて iPhone の中で動き、成分表もアプリに入っています。通信を使うのは App Store での購入処理と、自分の iCloud への同期だけです。iPhone 用（iOS 16 以降）で、表示は日本語です。</p>
+    </div>
+  </section>
+
   <!-- ═══ 出口 ═══ -->
   <section class="sec">
     <h2>もっと知る</h2>
@@ -421,14 +521,19 @@
       <a href="support.html">使い方とよくある質問</a>
       <a href="genka-calculator.html">原価計算ツール<span class="n">ブラウザで動く・無料</span></a>
       <a href="okashi-genka.html">お菓子の原価計算のやり方</a>
+      <a href="genka-label-app-comparison.html">原価計算と食品表示を両方できるアプリ比較<span class="n">2026年10月時点</span></a>
     </nav>
+    <div class="actions">
+      <a class="btn" href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a>
+    </div>
   </section>
 
   <footer>
     © 2026 Nobutaka Kawasaki<br>
     <a href="support.html">サポート</a> ·
     <a href="mailto:nosunosukawa@gmail.com">メール</a> ·
-    <a href="privacy.html">プライバシー</a>
+    <a href="privacy.html">プライバシー</a> ·
+    <a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store</a>
   </footer>
 
 </main>

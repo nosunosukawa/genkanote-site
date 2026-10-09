@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原価計算と食品表示ラベルを両方できるアプリは？お菓子・パンの原価計算・食品表示アプリ比較（2026年10月時点）</title>
+<meta name="description" content="お菓子・パンの原価計算と食品表示ラベル（原材料名・アレルゲン・栄養成分）を両方できるアプリは、原価ノートとパティレコ。ラベル専用の食品表示アプリ・食品表示印刷、原価専用の BakeCost・なんでも原価計算も含めた6本を、できることと向いている人で比べました（2026年10月10日に App Store の掲載内容で確認）。">
+<style>
+  /* 配色はトップページ（index.html）と同じトークン */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.8;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+  header{margin:20px 0 8px}
+  .crumb{font-size:13.5px}
+  h1{font-size:27px;line-height:1.35;letter-spacing:-.4px;font-weight:800;margin-top:10px}
+  .meta{margin-top:8px;font-size:13.5px;color:var(--ink-soft)}
+  h2{font-size:19px;font-weight:800;letter-spacing:-.2px;margin:40px 0 10px}
+  p + p{margin-top:10px}
+  .lead{margin-top:18px;font-size:16.5px}
+  a{color:var(--accent);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:underline}
+  .muted{color:var(--ink-soft);font-size:13.5px}
+  .scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch;
+    border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  table{border-collapse:collapse;min-width:100%;font-size:14.5px;white-space:nowrap}
+  th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line)}
+  thead th{background:var(--card);font-size:12.5px;color:var(--ink-soft);text-align:right}
+  tbody th,thead th:first-child{text-align:left}
+  tfoot th{text-align:left}
+  tfoot td,tfoot th{font-weight:800;border-bottom:none;border-top:2px solid var(--line)}
+  tr.total td,tr.total th{font-weight:800;border-top:2px solid var(--line)}
+  .hint{margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+  @media (min-width:700px){ .hint{display:none} }
+  @media (max-width:560px){ table{font-size:13px} th,td{padding:6px 9px} }
+  .cta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-top:40px}
+  .cta h2{margin:0 0 8px;font-size:16px}
+  .cta p{font-size:14.5px}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+  /* 比較ページ（2026-10-10）。表は文章なので左寄せ・折り返し */
+  table.cmp{min-width:640px;white-space:normal}
+  table.cmp th,table.cmp td,table.cmp thead th{text-align:left;vertical-align:top}
+  table.cmp tbody th{white-space:nowrap}
+  h3{font-size:17px;font-weight:800;margin:30px 0 6px}
+  .ours{font-size:12px;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);
+    border-radius:999px;padding:1px 9px;margin-left:6px;white-space:nowrap;vertical-align:2px}
+  .src{margin-top:6px;font-size:13px;color:var(--ink-soft)}
+  .key{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin-top:22px}
+  .key p:first-child{font-weight:700}
+  ul.pick{margin:10px 0 0 1.2em}
+  ul.pick li{margin-top:6px}
+  .getapp{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;padding:8px 18px;
+    background:var(--accent);color:var(--card);border-radius:4px;font-weight:700}
+</style>
+<meta property="og:title" content="原価計算と食品表示ラベルを両方できるアプリ比較（2026年10月時点）">
+<meta property="og:description" content="原価・売価の計算と、原材料名・アレルゲン・栄養成分のラベル。両方できるか、片方だけか。お菓子・パン向けのアプリ6本を比べました。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/genka-label-app-comparison.html">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/genka-label-app-comparison.html">
+<meta name="apple-itunes-app" content="app-id=6799887510">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "原価計算と食品表示ラベルを両方できるアプリは？お菓子・パンの原価計算・食品表示アプリ比較（2026年10月時点）",
+ "inLanguage": "ja",
+ "datePublished": "2026-10-10",
+ "dateModified": "2026-10-10",
+ "author": {
+  "@type": "Person",
+  "name": "Nobutaka Kawasaki"
+ },
+ "mainEntityOfPage": "https://nosunosukawa.github.io/genkanote-site/genka-label-app-comparison.html"
+}
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "da30c37073e746159a379341e417854d"}'></script>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+</head>
+<body>
+<!--
+  比較ページ（2026-10-10）。生成AI・検索の「原価計算と食品表示を両方できるアプリは？」に答える。
+  競合は App Store の掲載（iTunes lookup API・2026-10-10）で実在を確かめ、説明文に書かれている機能だけを書く。
+  価格・課金の線は書かない（自社も競合も）。自社だけ褒めない。okashi-genka（計算のやり方）と題名を食い合わせない。
+-->
+<div class="wrap">
+
+  <header>
+    <p class="crumb"><a href="index.html">原価ノート</a> › 比較</p>
+    <h1>原価計算と食品表示ラベルを両方できるアプリは？<br>——お菓子・パンの原価計算・食品表示アプリ比較（2026年10月時点）</h1>
+    <p class="meta">確認日: 2026年10月10日（各アプリの App Store の掲載内容で確認）</p>
+  </header>
+
+  <div class="key">
+    <p>原価計算と食品表示ラベルを1つのアプリで両方やるなら、原価ノートかパティレコです。</p>
+    <p>ラベルだけでよいなら食品表示アプリ（ラベル作成・栄養計算）や食品表示印刷、値付けの計算だけでよいなら BakeCost やなんでも原価計算が候補になります。</p>
+  </div>
+
+  <p class="lead">このページは原価ノートの開発者が書いています。公平にするため、各アプリについては App Store の説明文に書かれている機能だけを載せ、推測で足していません。価格は変わるので載せていません。食品表示の最終的な責任は、どのアプリを使っても販売者にあります。</p>
+
+  <h2>早見表</h2>
+  <div class="scroll">
+    <table class="cmp">
+      <thead><tr><th>アプリ</th><th>原価・売価の計算</th><th>食品表示ラベル</th><th>向いている人</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">原価ノート</th><td>人件費・包装費・販売手数料・歩留まりまで</td><td>原材料名・アレルゲン・栄養成分、シールに面付けしてPDF</td><td>お菓子・パンを個人で売る人</td></tr>
+        <tr><th scope="row">パティレコ</th><td>原価・原価率・売価の目安</td><td>原材料名・アレルゲン・栄養成分（プレビューしてコピー）</td><td>手書きの配合表が多い洋菓子店</td></tr>
+        <tr><th scope="row">食品表示アプリ</th><td>説明文に記載なし</td><td>AIでレシピを読み取り、栄養・アレルギー表示を作ってシール印刷</td><td>弁当・惣菜・マルシェのラベルを急いで作りたい人</td></tr>
+        <tr><th scope="row">食品表示印刷</th><td>説明文に記載なし</td><td>シンプルなラベルの作成と印刷</td><td>ラベルだけを最小限の手間で刷りたい人</td></tr>
+        <tr><th scope="row">BakeCost</th><td>人件費・包装費・手数料・ロス、製造計画・在庫台帳まで</td><td>説明文に記載なし</td><td>値付けと仕入れ・製造をまとめて管理したい人</td></tr>
+        <tr><th scope="row">なんでも原価計算</th><td>原価・原価率・利益、AIでレシピ下書き</td><td>説明文に記載なし</td><td>飲食店も含めて原価をざっと押さえたい人</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+
+  <h3>原価ノート<span class="ours">このサイトのアプリ</span></h3>
+  <p>レシピを1回入れると、原価・原価率・売価と食品表示ラベルが同じレシピから出ます。原価は材料費（歩留まり・製造ロス込み）・人件費・包装費・販売手数料の合計で、目標の原価率から売価を逆算します。原材料名は重さの多い順に並び、アレルゲンは材料ごとの設定から29品目でまとまり、栄養成分は日本食品標準成分表（八訂）増補2023年から計算します。ラベルは市販のシール（A4・12面／24面、単票）や62mm幅のラベルプリンター用に PDF で書き出せます。Excel の材料表は貼り付けで取り込め、アカウントは要りません。</p>
+  <p><strong>向いていない人:</strong> 在庫・発注・製造計画まで管理したい人（扱っていません）。手書きのレシピを写真で読み取らせたい人（機能がありません）。アレルゲンを自動で判定してほしい人（材料ごとに自分で設定します）。iPhone 以外で使いたい人。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id6799887510">App Store（id6799887510）</a></p>
+
+  <h3>パティレコ - 洋菓子レシピ・栄養成分表示ラベル作成</h3>
+  <p>洋菓子店・パティシエ向けの製菓レシピ管理アプリです。手書きのレシピを撮影して材料を読み取り、日本食品標準成分表（八訂）をもとに栄養成分を計算します。原材料名・アレルゲン・栄養成分表示をまとめて確認し、プレビューしてコピーできます。材料や包材の仕入価格から1個あたりの原価と原価率を出し、目標原価率から売価の目安も確認できます。中間レシピの積み上げ、A4でのレシピ印刷もあります。</p>
+  <p><strong>向いている人:</strong> 紙の配合表がたくさんあって、写真から取り込みたいお店。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id6792622647">App Store（id6792622647）</a>（提供: Miiro Igarashi）</p>
+
+  <h3>食品表示アプリ｜ラベル作成・栄養計算（弁当・マルシェ）</h3>
+  <p>食品表示ラベルを作る業務用アプリです。手書きのレシピやメモを撮影すると、AIが材料名と分量を読み取り、栄養成分とアレルギー表示を作ります。原材料の重量順の並び替え、添加物の区切り、最小文字サイズの警告があり、シールを印刷できます。原価計算は説明文には書かれていません。</p>
+  <p><strong>向いている人:</strong> お弁当・お惣菜・マルシェで、ラベルを手早く作りたい人。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id6758343135">App Store（id6758343135）</a>（提供: Yasuaki Suto）</p>
+
+  <h3>食品表示印刷</h3>
+  <p>シンプルな食品表示ラベルの作成と印刷のアプリで、一般的な家庭用プリンタで使えます（プリンタとラベルシールは別に用意）。提供元の発表では、2024年11月に栄養成分表示に対応し、ブラザー製ラベルプリンタへの対応も広げています。原価計算は説明文には書かれていません。</p>
+  <p><strong>向いている人:</strong> 原価は別で計算していて、ラベルの印刷だけを手早く済ませたい人。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id1526012504">App Store（id1526012504）</a>（提供: RELATION DESIGN LABO, GENERAL INC. ASSOCIATION）・<a href="https://zaikei.co.jp/releases/2692276/">提供元のリリース</a></p>
+
+  <h3>原価計算・原価率 レシピ値付け BakeCost</h3>
+  <p>焼き菓子販売・カフェ・キッチンカーなど小さな食品販売者向けの、原価計算と値付けのアプリです。材料費・仕込み品・人件費・包装費・想定ロス・販売手数料を含めて原価率・利益率・推奨販売価格を出し、材料価格が変わったときに影響するレシピを確認できます。仕入先・仕入れ履歴・材料在庫台帳、製造計画・製造履歴、CSV の読み込みと書き出しもあります。食品表示ラベルは説明文には書かれていません。</p>
+  <p><strong>向いている人:</strong> 値付けに加えて、仕入れや製造の記録まで1つで管理したい人。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id6770001554">App Store（id6770001554）</a>（提供: kurihara kazuki）</p>
+
+  <h3>なんでも原価計算 : レシピ原価計算アプリ</h3>
+  <p>飲食店・ベーカリー・お菓子の個人販売向けのレシピ原価計算アプリです。材料の購入金額と使用量から1個あたりの原価を出し、販売価格に対する原価率と利益を確認できます。材料価格を更新するとレシピの原価も計算し直され、仕込みや中間材料にも対応し、画像からAIでレシピの下書きを作れます。食品表示ラベルは説明文には書かれていません。</p>
+  <p><strong>向いている人:</strong> お菓子に限らず、飲食のメニュー全体の原価を押さえたい人。</p>
+  <p class="src">出典: <a href="https://apps.apple.com/jp/app/id6743666327">App Store（id6743666327）</a>（提供: Masaya Sugino）</p>
+
+  <h2>選び方の目安</h2>
+  <ul class="pick">
+    <li><strong>原価計算とラベルを同じレシピから両方出したい</strong> → 原価ノート・パティレコ。</li>
+    <li><strong>人件費・委託の手数料まで入れて値付けしたい</strong> → 原価ノート・BakeCost。</li>
+    <li><strong>手書きのレシピを写真で取り込みたい</strong> → パティレコ・食品表示アプリ・なんでも原価計算。</li>
+    <li><strong>ラベルを印刷するだけでよい</strong> → 食品表示印刷・食品表示アプリ。</li>
+    <li><strong>仕入れ・在庫・製造計画まで</strong> → BakeCost。</li>
+  </ul>
+  <p>アプリを入れる前に計算の中身を確かめたいなら、<a href="okashi-genka.html">お菓子の原価計算のやり方</a>と、ブラウザで動く<a href="genka-calculator.html">原価計算ツール</a>もあります。食品表示に必要な項目は販売の形態や自治体で変わるので、売り始める前に保健所に確認してください。</p>
+
+  <div class="cta">
+    <h2>原価ノートを試すなら</h2>
+    <p>iPhone 用（iOS 16 以降）。<a href="index.html">機能の紹介</a> ／ <a href="support.html">使い方とよくある質問</a></p>
+    <p><a class="getapp" href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a></p>
+  </div>
+
+  <p class="muted" style="margin-top:28px">各アプリの機能は2026年10月10日時点の App Store の説明文（食品表示印刷は提供元の発表も）によります。アップデートで変わることがあります。</p>
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="index.html">原価ノート</a> · <a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a> · <a href="privacy.html">プライバシーポリシー</a>
+  </footer>
+
+</div>
+</body>
+</html>
