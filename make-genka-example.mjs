@@ -16,6 +16,7 @@
  *                       fig-price     逆算売価の図
  *   support.html      : tbl-cost      内訳の表（図の数値の表版）
  *                       tbl-steps     積み上げの表
+ *   komugi-neage.html : komugi        小麦12%値上げの記事本文の表
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -411,9 +412,106 @@ ${steps
 writeBlock("support.html", "tbl-cost", tblCost);
 writeBlock("support.html", "tbl-steps", tblSteps);
 
+/* ============ 記事 komugi-neage.html（小麦12%の値上げ） ============
+   上の型抜きクッキーと同じレシピ・同じ条件で、材料の購入価格だけを差し替えて計算し直す
+   （アプリの「値上げの影響一覧」と同じやり方: 式は持たず、単価だけ変えた ctx で costBreakdown を呼ぶ）。
+   12.0% は農水省の発表（令和8年10月期の輸入小麦の政府売渡価格）。最低賃金+56円は JILPT 2026年10月号。 */
+
+const RISE = 0.12;            // 小麦の値上げ率
+const WAGE_UP = 56;           // 最低賃金の引上げ額（全国加重平均）
+const raised = (ids, r = RISE) => {
+  const m = new Map();
+  for (const [k, v] of ingredients) {
+    m.set(k, ids === "all" || ids.includes(k) ? { ...v, purchasePrice: v.purchasePrice * (1 + r) } : v);
+  }
+  return m;
+};
+const ctxOf = (ings, wage = c.defaultHourlyWage) => ({ ingredients: ings, recipes: new Map(), defaultHourlyWage: wage });
+const kFlour = G.costBreakdown(recipe, ctxOf(raised(["flour"])));
+const kAll = G.costBreakdown(recipe, ctxOf(raised("all")));
+const kWage = G.costBreakdown(recipe, ctxOf(ingredients, c.defaultHourlyWage + WAGE_UP));
+const kBoth = G.costBreakdown(recipe, ctxOf(raised("all"), c.defaultHourlyWage + WAGE_UP));
+const dFlour = kFlour.totalPerPiece - b.totalPerPiece;
+const dAll = kAll.totalPerPiece - b.totalPerPiece;
+const dWage = kWage.totalPerPiece - b.totalPerPiece;
+const dBoth = kBoth.totalPerPiece - b.totalPerPiece;
+const flourShare = lineCost("flour", 200) / (recipe.lines.reduce((s, l) => s + lineCost(l.ref.id, l.amount), 0));
+const yen2 = (n) => n.toFixed(2);
+
+// 材料ごとに「その材料だけ12%上がったら」
+const perIng = recipe.lines
+  .map((l) => {
+    const x = G.costBreakdown(recipe, ctxOf(raised([l.ref.id])));
+    return { name: ingredients.get(l.ref.id).name, d: x.totalPerPiece - b.totalPerPiece };
+  })
+  .sort((p, q) => q.d - p.d);
+
+const spOf = (ings, wage, fee) =>
+  G.roundPriceUp(G.suggestedPrice({ ...recipe, feeRate: fee }, ctxOf(ings, wage), TARGET_RATE), 10);
+const priceRows = [
+  ["いま", ingredients, c.defaultHourlyWage],
+  ["薄力粉だけ+12%", raised(["flour"]), c.defaultHourlyWage],
+  [`材料ぜんぶ+12%・時給+${WAGE_UP}円`, raised("all"), c.defaultHourlyWage + WAGE_UP],
+].map(([label, ings, w]) => ({ label, direct: spOf(ings, w, 0), consign: spOf(ings, w, recipe.feeRate) }));
+
+const komugiBlock = `  <h2>答え: 1枚あたり約${yen2(dFlour)}円</h2>
+  <p><a href="okashi-genka.html">お菓子の原価計算のやり方</a>と同じ型抜きクッキー（30枚・バター150g・薄力粉200g ほか）で計算します。
+     薄力粉は1kg¥${yen0(ingredients.get("flour").purchasePrice)}、時給¥${yen0(c.defaultHourlyWage)}・90分、製造ロス${pct0(recipe.lossRate)}%です。</p>
+  <p>薄力粉の仕入れ値が${pct0(RISE)}%上がって1kg¥${yen0(ingredients.get("flour").purchasePrice * (1 + RISE))}になると、
+     1枚の原価は<strong>¥${yen2(b.totalPerPiece)} → ¥${yen2(kFlour.totalPerPiece)}</strong>。
+     増えるのは<strong>1枚あたり¥${yen2(dFlour)}</strong>、30枚で¥${yen(dFlour * recipe.yieldCount)}です。</p>
+  <p>小さいのは、このクッキーの材料費のうち薄力粉が<strong>${pct0(flourShare)}%</strong>しかないからです。
+     材料費の大半はバターとアーモンドプードルです。</p>
+
+  <h2>同じ12%でも、材料によって効き方がちがう</h2>
+  <p>「その材料だけが${pct0(RISE)}%上がったら、1枚いくら上がるか」を材料ごとに出しました。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>${pct0(RISE)}%上がった材料</th><th>1枚あたり</th><th>30枚で</th></tr></thead>
+      <tbody>
+${perIng
+  .map(
+    (p) =>
+      `        <tr><th scope="row">${p.name}</th><td>+¥${yen2(p.d)}</td><td>+¥${yen(p.d * recipe.yieldCount)}</td></tr>`
+  )
+  .join("\n")}
+        <tr class="total"><th scope="row">材料ぜんぶ</th><td>+¥${yen2(dAll)}</td><td>+¥${yen(dAll * recipe.yieldCount)}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>小麦だけなら1枚¥${yen2(dFlour)}。同じ${pct0(RISE)}%でもバターなら¥${yen2(perIng.find((p) => p.name.startsWith("バター")).d)}です。
+     そして今年は最低賃金も上がります（全国加重平均で${WAGE_UP}円）。作業の時給を${WAGE_UP}円上げて数えると、90分の作業で<strong>1枚あたり¥${yen2(dWage)}</strong>。
+     このクッキーでは、<strong>小麦の値上げより時給の方が効きます</strong>。</p>
+
+  <h2>売価は変えるべき？</h2>
+  <p>原価率${pct0(TARGET_RATE)}%を守る売価（10円単位で切り上げ）は、こう動きます。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>条件</th><th>直販（手数料0%）</th><th>委託（手数料${pct0(recipe.feeRate)}%）</th></tr></thead>
+      <tbody>
+${priceRows
+  .map(
+    (r) =>
+      `        <tr><th scope="row">${r.label}</th><td>¥${yen0(r.direct)}</td><td>¥${yen0(r.consign)}</td></tr>`
+  )
+  .join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>小麦だけなら、売価は${priceRows[1].direct === priceRows[0].direct && priceRows[1].consign === priceRows[0].consign ? "据え置きで足ります" : "上げる必要があります"}。
+     材料ぜんぶ+${pct0(RISE)}%と時給+${WAGE_UP}円が重なると、1枚¥${yen2(dBoth)}上がり、
+     直販は¥${yen0(priceRows[0].direct)}→¥${yen0(priceRows[2].direct)}、委託は¥${yen0(priceRows[0].consign)}→¥${yen0(priceRows[2].consign)}になります。
+     委託は手数料が売価に比例するので、同じ値上げでも動きが大きくなります。</p>`;
+
+writeBlock("komugi-neage.html", "komugi", komugiBlock);
+
 console.log(
   `生成: 材料¥${yen(b.materialsPerPiece)}/枚 → 総原価¥${yen(b.totalPerPiece)}/枚（原価率${pct(b.costRate)}% = ${verdict}）・` +
     `逆算売価 直販¥${yen0(priceDirect)} / 委託¥${yen0(priceConsign)}\n` +
     `  積み上げ: ${steps.map((s) => `${s.label} ¥${yen(s.total)}(${pct(s.rate)}%)`).join(" → ")}\n` +
-    `  書き換え: okashi-genka.html / index.html(fig-hero, fig-steps, fig-price) / support.html(tbl-cost, tbl-steps)`
+    `  小麦+${pct0(RISE)}%: +¥${yen2(dFlour)}/枚・材料ぜんぶ +¥${yen2(dAll)}・時給+${WAGE_UP}円 +¥${yen2(dWage)}・両方 +¥${yen2(dBoth)}` +
+    `・売価 直販 ${priceRows.map((r) => r.direct).join("→")} / 委託 ${priceRows.map((r) => r.consign).join("→")}\n` +
+    `  書き換え: okashi-genka.html / index.html(fig-hero, fig-steps, fig-price) / support.html(tbl-cost, tbl-steps) / komugi-neage.html(komugi)`
 );

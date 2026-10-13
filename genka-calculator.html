@@ -70,6 +70,8 @@
   .suggest{margin-top:12px;font-size:15px}
   .suggest strong{font-size:20px}
   .err{color:var(--high);font-weight:600;font-size:14.5px;margin-top:10px}
+  .after{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .afterHead{font-size:13px;font-weight:700;color:var(--ink-soft)}
   footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
 </style>
 <meta property="og:title" content="レシピ原価計算ツール（無料）— 原価率と売価がその場で出る">
@@ -148,6 +150,19 @@
     <p class="muted" style="margin-top:8px">手数料のめやす: minne 10.56%・Creema 11%・
        BASE 6.6%＋40円（率だけ入れてください）・対面販売は0%。</p>
 
+    <div class="grid" style="margin-top:16px">
+      <div class="field">
+        <label for="upTarget">値上げする材料</label>
+        <select id="upTarget"><option value="all">材料ぜんぶ</option></select>
+      </div>
+      <div class="field">
+        <label for="upRate">値上げ率（%・任意）</label>
+        <input id="upRate" type="number" inputmode="decimal" min="0" max="300" step="1" placeholder="例: 12">
+      </div>
+    </div>
+    <p class="muted" style="margin-top:8px">材料の購入価格がこの率で上がったときの原価と売価を、いまと並べて出します。
+       例: <a href="komugi-neage.html">小麦が12%上がると、クッキー1枚いくら上がる？</a></p>
+
     <div class="result" id="result"></div>
   </div>
 
@@ -185,6 +200,7 @@
   function addRow(name, price, pack, use){
     var div = document.createElement("div");
     div.className = "ingRow";
+    div.dataset.key = "k" + (seq + 1);
     div.innerHTML =
       '<input type="text" placeholder="材料 ' + (++seq) + '" value="' + (name || "") + '">' +
       '<input type="number" inputmode="decimal" min="0" placeholder="円" value="' + (price || "") + '">' +
@@ -203,15 +219,18 @@
     var ings = new Map();
     var lines = [];
     var i = 0;
+    var keyOf = {};  // 材料id → 行のkey（値上げする材料の選択に使う）
     rowsEl.querySelectorAll(".ingRow").forEach(function(row){
       var f = row.querySelectorAll("input");
       var price = parseFloat(f[1].value), pack = parseFloat(f[2].value), use = parseFloat(f[3].value);
       if (!(price >= 0) || !(pack > 0) || !(use > 0)) return;
       var id = "i" + (i++);
+      keyOf[id] = row.dataset.key;
       ings.set(id, { id: id, name: f[0].value || id, purchasePrice: price,
                      packAmount: pack, packUnit: "g", yieldRate: 1, allergens: [] });
       lines.push({ ref: { kind: "ingredient", id: id }, amount: use, unit: "g" });
     });
+    syncUpTarget();
 
     var yieldCount = parseInt($("yieldCount").value, 10);
     var lossRate = (parseFloat($("lossRate").value) || 0) / 100;
@@ -259,12 +278,60 @@
     } else if (spErr){
       html += '<p class="err">' + spErr + "</p>";
     }
+
+    // 値上げ後: 式は持たず、購入価格だけ差し替えた材料で同じ costBreakdown を呼び直す
+    var upRate = parseFloat($("upRate").value);
+    if (upRate > 0){
+      var upKey = $("upTarget").value;
+      var ings2 = new Map();
+      ings.forEach(function(g, id){
+        var hit = upKey === "all" || keyOf[id] === upKey;
+        ings2.set(id, hit ? Object.assign({}, g, { purchasePrice: g.purchasePrice * (1 + upRate / 100) }) : g);
+      });
+      var ctx2 = { ingredients: ings2, recipes: ctx.recipes, defaultHourlyWage: ctx.defaultHourlyWage };
+      var b2 = Genka.costBreakdown(recipe, ctx2);
+      var d = b2.totalPerPiece - b.totalPerPiece;
+      var sign = function(v){ return (v >= 0 ? "+" : "−") + "¥" + (Math.abs(v) < 10 ? Math.abs(v).toFixed(2) : (Math.round(Math.abs(v) * 10) / 10).toLocaleString("ja-JP")); };
+      var tgtName = upKey === "all" ? "材料ぜんぶ" : $("upTarget").selectedOptions[0].textContent;
+      html += '<div class="after"><p class="afterHead">' + tgtName.replace(/[&<>"]/g, "") + " が " + upRate + "% 上がったら</p>";
+      html += '<p class="breakdown" style="margin-top:4px">1個あたり ' + yen(b.totalPerPiece) + " → <strong>" + yen(b2.totalPerPiece) +
+              "</strong>（" + sign(d) + "／" + yieldCount + "個で" + sign(d * yieldCount) + "）";
+      if (b2.costRate != null){
+        html += "・原価率 " + Math.round(b.costRate * 1000) / 10 + "% → " + Math.round(b2.costRate * 1000) / 10 + "%";
+      }
+      html += "</p>";
+      if (sp != null){
+        var sp2 = Genka.roundPriceUp(Genka.suggestedPrice(recipe, ctx2, target));
+        html += '<p class="suggest" style="margin-top:6px">原価率' + Math.round(target * 100) + "%におさめる売価: " +
+                yen(sp) + " → <strong>" + yen(sp2) + "</strong> /個" +
+                (sp2 === sp ? '<span class="muted">（10円単位では変わりません）</span>' : "") + "</p>";
+      }
+      html += "</div>";
+    }
     out.innerHTML = html;
   }
 
-  ["yieldCount","lossRate","minutes","wage","pack","fee","price","target"].forEach(function(id){
+  // 「値上げする材料」の選択肢を材料の行に合わせる（選んでいた行は残す）
+  function syncUpTarget(){
+    var sel = $("upTarget"), keep = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    rowsEl.querySelectorAll(".ingRow").forEach(function(row, n){
+      var name = row.querySelector("input").value.trim() || ("材料 " + (n + 1));
+      var o = document.createElement("option");
+      o.value = row.dataset.key; o.textContent = name;
+      sel.appendChild(o);
+    });
+    sel.value = keep;
+    if (sel.value !== keep) sel.value = "all";
+  }
+
+  ["yieldCount","lossRate","minutes","wage","pack","fee","price","target","upRate"].forEach(function(id){
     $(id).addEventListener("input", compute);
   });
+  $("upTarget").addEventListener("change", compute);
+  // 記事からのリンク（#neage=12）で値上げ率を入れておく。# 以降はサーバーに送られない
+  var mHash = /neage=(\d+(?:\.\d+)?)/.exec(location.hash);
+  if (mHash) $("upRate").value = mHash[1];
   $("addRow").addEventListener("click", function(){ addRow(); });
 
   // 初期3行（サンプル値: バタークッキー相当）

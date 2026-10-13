@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小麦が12%上がると、クッキー1枚いくら上がる？【2026年10月・計算例つき】</title>
+<meta name="description" content="2026年10月、輸入小麦の政府売渡価格が12.0%上がりました。手作りクッキー1枚の原価がいくら上がるかを、材料ごと・時給の引上げ込みで計算します。売価を変えるべきかの目安つき。">
+<style>
+  /* 配色は okashi-genka.html と同じトークン。
+     字体はヒラギノを先頭にする（-apple-system が先頭だと iOS シミュレータの Safari で日本語が□になった実例がある） */
+  :root{
+    --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+    --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+      --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",Meiryo,sans-serif;
+    line-height:1.8;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto}
+  header{margin:20px 0 8px}
+  .crumb{font-size:13.5px}
+  h1{font-size:27px;line-height:1.35;letter-spacing:-.4px;font-weight:800;margin-top:10px}
+  .meta{margin-top:8px;font-size:13.5px;color:var(--ink-soft)}
+  h2{font-size:19px;font-weight:800;letter-spacing:-.2px;margin:40px 0 10px}
+  p + p{margin-top:10px}
+  .lead{margin-top:18px;font-size:16.5px}
+  a{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  .muted{color:var(--ink-soft);font-size:13.5px}
+  .scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch;
+    border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  table{border-collapse:collapse;min-width:100%;font-size:14.5px;white-space:nowrap}
+  th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line)}
+  thead th{background:var(--card);font-size:12.5px;color:var(--ink-soft);text-align:right}
+  tbody th,thead th:first-child{text-align:left}
+  tr.total td,tr.total th{font-weight:800;border-top:2px solid var(--line)}
+  .hint{margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+  @media (min-width:700px){ .hint{display:none} }
+  @media (max-width:560px){ table{font-size:13px} th,td{padding:6px 9px} }
+  .src{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin-top:14px;font-size:14px}
+  .src li{margin-left:1.2em}
+  .src li + li{margin-top:6px}
+  .cta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;margin-top:40px}
+  .cta h2{margin:0 0 8px;font-size:16px}
+  .cta p{font-size:14.5px}
+  .btn{display:inline-block;margin-top:12px;background:var(--accent);color:var(--bg);
+    padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+  footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
+</style>
+<meta property="og:title" content="小麦が12%上がると、クッキー1枚いくら上がる？">
+<meta property="og:description" content="輸入小麦の政府売渡価格+12.0%（2026年10月期）で、手作りクッキー1枚の原価はいくら上がるか。材料ごと・時給込みで計算しました。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/komugi-neage.html">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/komugi-neage.html">
+<meta name="apple-itunes-app" content="app-id=6799887510">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "小麦が12%上がると、クッキー1枚いくら上がる？",
+ "inLanguage": "ja",
+ "datePublished": "2026-10-14",
+ "dateModified": "2026-10-14",
+ "author": {
+  "@type": "Person",
+  "name": "Nobutaka Kawasaki"
+ },
+ "mainEntityOfPage": "https://nosunosukawa.github.io/genkanote-site/komugi-neage.html"
+}
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "da30c37073e746159a379341e417854d"}'></script>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="crumb"><a href="index.html">原価ノート</a> › ガイド</p>
+    <h1>小麦が12%上がると、<br>クッキー1枚いくら上がる？</h1>
+    <p class="meta">2026年10月14日。数値はアプリ「原価ノート」と同じ計算エンジンを実行して出しています（手計算ではありません）。</p>
+  </header>
+
+  <p class="lead">2026年10月から、輸入小麦の政府売渡価格が<strong>12.0%</strong>上がりました。
+     「小麦粉が上がるなら、焼き菓子も値上げしないと」と思った方へ。
+     まず1枚あたりいくら上がるのかを、数字で出してみます。</p>
+
+  <h2>何が12%上がったのか</h2>
+  <p>農林水産省が2026年9月9日に発表した、<strong>令和8年10月期の輸入小麦の政府売渡価格</strong>です。
+     5銘柄の加重平均（税込）で1トン62,520円から<strong>70,020円</strong>へ、12.0%の引上げです。</p>
+  <p class="muted">これは国が製粉会社に売る値段です。お店で買う薄力粉が同じ率で上がるとは限りません。
+     この記事では「薄力粉の仕入れ値が12%上がったら」と置いて計算します。</p>
+
+  <!-- komugi:start（node make-genka-example.mjs が生成。手で直さない） -->
+  <h2>答え: 1枚あたり約0.27円</h2>
+  <p><a href="okashi-genka.html">お菓子の原価計算のやり方</a>と同じ型抜きクッキー（30枚・バター150g・薄力粉200g ほか）で計算します。
+     薄力粉は1kg¥320、時給¥1,100・90分、製造ロス5%です。</p>
+  <p>薄力粉の仕入れ値が12%上がって1kg¥358になると、
+     1枚の原価は<strong>¥147.56 → ¥147.83</strong>。
+     増えるのは<strong>1枚あたり¥0.27</strong>、30枚で¥8.1です。</p>
+  <p>小さいのは、このクッキーの材料費のうち薄力粉が<strong>8%</strong>しかないからです。
+     材料費の大半はバターとアーモンドプードルです。</p>
+
+  <h2>同じ12%でも、材料によって効き方がちがう</h2>
+  <p>「その材料だけが12%上がったら、1枚いくら上がるか」を材料ごとに出しました。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>12%上がった材料</th><th>1枚あたり</th><th>30枚で</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">バター（食塩不使用）</th><td>+¥2.02</td><td>+¥60.6</td></tr>
+        <tr><th scope="row">アーモンドプードル</th><td>+¥0.63</td><td>+¥18.9</td></tr>
+        <tr><th scope="row">薄力粉</th><td>+¥0.27</td><td>+¥8.1</td></tr>
+        <tr><th scope="row">卵</th><td>+¥0.16</td><td>+¥4.8</td></tr>
+        <tr><th scope="row">グラニュー糖</th><td>+¥0.11</td><td>+¥3.2</td></tr>
+        <tr class="total"><th scope="row">材料ぜんぶ</th><td>+¥3.19</td><td>+¥95.6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>小麦だけなら1枚¥0.27。同じ12%でもバターなら¥2.02です。
+     そして今年は最低賃金も上がります（全国加重平均で56円）。作業の時給を56円上げて数えると、90分の作業で<strong>1枚あたり¥2.80</strong>。
+     このクッキーでは、<strong>小麦の値上げより時給の方が効きます</strong>。</p>
+
+  <h2>売価は変えるべき？</h2>
+  <p>原価率50%を守る売価（10円単位で切り上げ）は、こう動きます。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>条件</th><th>直販（手数料0%）</th><th>委託（手数料30%）</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">いま</th><td>¥190</td><td>¥470</td></tr>
+        <tr><th scope="row">薄力粉だけ+12%</th><td>¥190</td><td>¥470</td></tr>
+        <tr><th scope="row">材料ぜんぶ+12%・時給+56円</th><td>¥200</td><td>¥500</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>小麦だけなら、売価は据え置きで足ります。
+     材料ぜんぶ+12%と時給+56円が重なると、1枚¥5.99上がり、
+     直販は¥190→¥200、委託は¥470→¥500になります。
+     委託は手数料が売価に比例するので、同じ値上げでも動きが大きくなります。</p>
+  <!-- komugi:end -->
+
+  <h2>自分のレシピで試す</h2>
+  <p>パンのように材料費の多くが小麦粉のものは、上の例より大きく効きます。
+     <a href="genka-calculator.html#neage=12">無料の原価計算ツール</a>に「値上げ率」の欄を足しました。
+     材料を選んで12%と入れると、値上げ後の原価と売価が並んで出ます。
+     ブラウザの中で計算し、入力した内容はどこにも送信しません。</p>
+
+  <div class="cta">
+    <h2>値上げのたびに全部のレシピを計算し直すのは大変</h2>
+    <p>iPhone アプリ「原価ノート」は、材料の値段を1か所変えると、
+       その材料を使う全部のレシピの原価・原価率が計算し直されます。
+       同じレシピから食品表示ラベルの PDF も作れます。</p>
+    <a class="btn" href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で見る</a>
+  </div>
+
+  <h2>出典</h2>
+  <ul class="src">
+    <li>農林水産省「輸入小麦の政府売渡価格の改定について」2026年9月9日
+      <a href="https://www.maff.go.jp/j/press/nousan/boeki/260909.html" target="_blank" rel="noopener">maff.go.jp/j/press/nousan/boeki/260909.html</a>（2026年10月14日に閲覧）</li>
+    <li>時給の引上げ額（全国加重平均 1,177円・56円の引上げ・10月1日〜12月2日に順次発効）:
+      労働政策研究・研修機構『ビジネス・レーバー・トレンド』2026年10月号
+      <a href="https://www.jil.go.jp/kokunai/blt/backnumber/2026/10/special_03.html" target="_blank" rel="noopener">jil.go.jp</a>（2026年10月14日に閲覧）</li>
+  </ul>
+
+  <h2>この記事の数値について</h2>
+  <p class="muted">材料の購入価格・時給・手数料率は例です。値上げ前の仕入れ値は
+     <a href="okashi-genka.html">お菓子の原価計算のやり方</a>と同じものを使っています。
+     実際の値付けはご自身の仕入れ値と販売条件で計算してください。数値は
+     <code>make-genka-example.mjs</code> がアプリの計算エンジンを実行して生成しています。</p>
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="index.html">原価ノート</a> · <a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a> · <a href="genka-calculator.html">原価計算ツール</a> · <a href="privacy.html">プライバシーポリシー</a>
+  </footer>
+
+</div>
+</body>
+</html>
