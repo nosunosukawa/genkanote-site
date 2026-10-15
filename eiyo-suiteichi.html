@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>栄養成分表示の「推定値」はどう作る？手作りお菓子の計算例つき</title>
+<meta name="description" content="手作りお菓子の栄養成分表示は、日本食品標準成分表などから計算した推定値でも書けます。条件は「推定値」または「この表示値は、目安です。」の併記と根拠資料の保管。クッキー1枚で計算しました。">
+<link rel="stylesheet" href="guide.css">
+<meta property="og:title" content="栄養成分表示の「推定値」はどう作る？">
+<meta property="og:description" content="手作りお菓子の栄養成分表示は、日本食品標準成分表などから計算した推定値でも書けます。条件は「推定値」または「この表示値は、目安です。」の併記と根拠資料の保管。クッキー1枚で計算しました。">
+<meta property="og:url" content="https://nosunosukawa.github.io/genkanote-site/eiyo-suiteichi.html">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://nosunosukawa.github.io/genkanote-site/eiyo-suiteichi.html">
+<meta name="apple-itunes-app" content="app-id=6799887510">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "栄養成分表示の「推定値」はどう作る？",
+ "inLanguage": "ja",
+ "datePublished": "2026-10-16",
+ "dateModified": "2026-10-16",
+ "author": {
+  "@type": "Person",
+  "name": "Nobutaka Kawasaki"
+ },
+ "mainEntityOfPage": "https://nosunosukawa.github.io/genkanote-site/eiyo-suiteichi.html"
+}
+</script>
+<!-- faq-ld:start（node make-genka-example.mjs が本文の「よくある質問」から生成。手で直さない） -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "inLanguage": "ja",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "手作りお菓子の栄養成分は、分析しないといけない？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "分析は必須ではありません。データベースなどから計算した値も、「推定値」または「この表示値は、目安です。」と書き、根拠の資料を保管すれば表示に使えるとされています。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "個人で売るお菓子にも、栄養成分表示は要る？",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "消費税の免税事業者や小規模企業者が売るものは省ける場合があります。栄養について何か書く場合や、小規模でないお店が売る場合は省けません。迷ったら保健所に確認してください。"
+   }
+  }
+ ]
+}
+</script>
+  <!-- faq-ld:end -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "da30c37073e746159a379341e417854d"}'></script>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="crumb"><a href="index.html">原価ノート</a> › <a href="index.html#guides">お役立ち記事</a></p>
+    <h1>栄養成分表示の「推定値」は<br>どう作る？</h1>
+    <p class="meta">2026年10月16日。原材料名・栄養の例は、アプリ「原価ノート」と同じ計算エンジンで作っています。</p>
+  </header>
+
+  <p class="lead">成分表などのデータから計算した値は、「推定値」または「この表示値は、目安です。」と書けば、栄養成分表示に使えます。計算の根拠は保管しておきます。</p>
+
+  <h2>推定値で書くときの2つの条件</h2>
+  <ul class="list">
+    <li>栄養成分表示の近くに「推定値」か「この表示値は、目安です。」と書く</li>
+    <li>値を決めた根拠の資料（レシピと計算）を保管する</li>
+  </ul>
+  <p>書くのは熱量・たんぱく質・脂質・炭水化物・食塩相当量の5つです。</p>
+
+  <!-- data:start（node make-genka-example.mjs が生成。手で直さない） -->
+  <h2>例: 型抜きクッキー1枚の推定値</h2>
+  <p>八訂の5食品（薄力粉・バター・グラニュー糖・全卵・アーモンド）の100gあたりの値に、配合の重さを掛けて足し、30枚で割りました。
+     焼いたあと30枚で470g（例）です。</p>
+  <div class="scroll">
+    <table class="nut">
+      <thead><tr><th>栄養成分表示</th><th>1個（16g）当たり</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">熱量</th><td>84kcal</td></tr>
+        <tr><th scope="row">たんぱく質</th><td>1.1g</td></tr>
+        <tr><th scope="row">脂質</th><td>5.3g</td></tr>
+        <tr><th scope="row">炭水化物</th><td>8.4g</td></tr>
+        <tr><th scope="row">食塩相当量</th><td>0.007g</td></tr>
+        <tr><td colspan="2" class="estimate">この表示値は、目安です。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">原価ノートのラベルと同じ丸め方（熱量は整数、ほかは小数第1位、食塩相当量は0.1g未満なら有効数字1桁）。</p>
+
+  <h2>100gあたりで書くなら、焼いたあとの重さで割る</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>100gあたり</th><th>焼いたあと470gで割る</th><th>生地541gで割ると</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">熱量</th><td>534kcal</td><td>464kcal</td></tr>
+        <tr><th scope="row">たんぱく質</th><td>7.1g</td><td>6.2g</td></tr>
+        <tr><th scope="row">脂質</th><td>33.7g</td><td>29.3g</td></tr>
+        <tr><th scope="row">炭水化物</th><td>53.7g</td><td>46.7g</td></tr>
+        <tr><th scope="row">食塩相当量</th><td>0.04g</td><td>0.04g</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>焼くと水分が抜けて軽くなります。1枚あたりの値は変わりませんが、
+     100gあたりは焼いたあとの重さで割らないと<strong>少なく出ます</strong>。</p>
+  <!-- data:end -->
+
+  <h2>推定値が使えないとき</h2>
+  <p>「低カロリー」「糖類ゼロ」のように栄養を強調して書く加工食品は、推定値では表示できません。</p>
+
+  <h2>表示を省ける場合</h2>
+  <p>消費税の免税事業者や小規模企業者（おおむね従業員20人以下、商業・サービス業は5人以下）が売るものは、栄養成分表示を省けます。
+     ただし、栄養について何か書く場合や、小規模でないお店が売る場合は省けません。</p>
+  <p class="note">この記事は消費者庁の資料の要点を短く言い換えたものです。必要な表示は売り方や品目で変わります。売り始める前に、保健所や消費者庁の資料で確かめてください。</p>
+
+  <section class="faq">
+    <h2>よくある質問</h2>
+  <!-- faq:start -->
+    <h3>手作りお菓子の栄養成分は、分析しないといけない？</h3>
+    <p>分析は必須ではありません。データベースなどから計算した値も、「推定値」または「この表示値は、目安です。」と書き、根拠の資料を保管すれば表示に使えるとされています。</p>
+    <h3>個人で売るお菓子にも、栄養成分表示は要る？</h3>
+    <p>消費税の免税事業者や小規模企業者が売るものは省ける場合があります。栄養について何か書く場合や、小規模でないお店が売る場合は省けません。迷ったら保健所に確認してください。</p>
+  <!-- faq:end -->
+  </section>
+
+  <div class="cta">
+    <h2>自分のレシピで計算する</h2>
+    <p>iPhone アプリ「原価ノート」は、レシピを1回入れると、原価・原価率・売価と食品表示ラベル（原材料名・アレルゲン・栄養成分）が同じレシピから出ます。
+       ブラウザで試すなら<a href="genka-calculator.html">無料の原価計算ツール</a>（入力はどこにも送信しません）。</p>
+    <a class="btn" href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で見る</a>
+  </div>
+
+  <h2>出典</h2>
+  <ul class="src">
+    <li>消費者庁「早わかり食品表示ガイド（令和7年4月版・事業者向け）」 <a href="https://www.caa.go.jp/policies/policy/food_labeling/information/pamphlets/assets/food_labeling_cms201_250512_02.pdf" target="_blank" rel="noopener">caa.go.jp（PDF）</a>（2026年10月16日に閲覧）</li>
+    <li>消費者庁「食品の栄養成分表示制度の概要」 <a href="https://www.caa.go.jp/policies/policy/food_labeling/nutrient_declearation/assets/food_labeling_cms206_20250930_10.pdf" target="_blank" rel="noopener">caa.go.jp（PDF）</a>（2026年10月16日に閲覧）</li>
+    <li>栄養の計算: 文部科学省「日本食品標準成分表（八訂）増補2023年」（原価ノートに同梱の値）</li>
+  </ul>
+
+  <!-- related:start（node make-genka-example.mjs が生成。手で直さない） -->
+  <nav class="related" aria-label="お役立ち記事">
+    <h2>ほかのお役立ち記事</h2>
+    <ul>
+      <li><a href="okashi-genka.html">お菓子の原価計算のやり方</a></li>
+      <li><a href="baika-kimekata.html">手作りお菓子の売値はどう決める？</a></li>
+      <li><a href="tesuuryou-hikaku.html">委託・マルシェ・minne・BASE、手数料でいくら残る？</a></li>
+      <li><a href="jinkenhi.html">お菓子の原価に、自分の人件費はどう入れる？</a></li>
+      <li><a href="budomari.html">卵の殻や割れたクッキーは、原価にどう入れる？</a></li>
+      <li><a href="komugi-neage.html">小麦が12%上がると、クッキー1枚いくら上がる？</a></li>
+      <li><a href="shokuhin-hyoji.html">手作りお菓子の食品表示ラベルには、何を書く？</a></li>
+      <li><a href="allergen-hyoji.html">カシューナッツの表示義務はいつから？</a></li>
+    </ul>
+  </nav>
+  <!-- related:end -->
+
+  <footer>
+    © 2026 Nobutaka Kawasaki · <a href="index.html">原価ノート</a> · <a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a> · <a href="genka-calculator.html">原価計算ツール</a> · <a href="privacy.html">プライバシーポリシー</a>
+  </footer>
+
+</div>
+</body>
+</html>

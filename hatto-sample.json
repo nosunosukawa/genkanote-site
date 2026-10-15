@@ -1,0 +1,47 @@
+{
+ "_note": "記事の栄養計算に使う八訂の値（100gあたり）。アプリ同梱の assets/db/hatto.db から抜き出したもの。手で直さない",
+ "source": "日本食品標準成分表（八訂）増補2023年 第2章",
+ "source_url": "https://www.mext.go.jp/content/20260327-mxt_kagsei-mext-000029402_02.xlsx",
+ "foods": {
+  "01015": {
+   "name": "こむぎ　［小麦粉］　薄力粉　1等",
+   "energyKcal": 349.0,
+   "proteinG": 8.3,
+   "fatG": 1.5,
+   "carbG": 75.8,
+   "saltG": 0.0
+  },
+  "03005": {
+   "name": "（砂糖類）　ざらめ糖　グラニュー糖",
+   "energyKcal": 394.0,
+   "proteinG": 0.0,
+   "fatG": 0.0,
+   "carbG": 100.0,
+   "saltG": 0.0
+  },
+  "05001": {
+   "name": "アーモンド　乾",
+   "energyKcal": 609.0,
+   "proteinG": 19.6,
+   "fatG": 51.8,
+   "carbG": 20.9,
+   "saltG": 0.0
+  },
+  "12004": {
+   "name": "鶏卵　全卵　生",
+   "energyKcal": 142.0,
+   "proteinG": 12.2,
+   "fatG": 10.2,
+   "carbG": 0.4,
+   "saltG": 0.4
+  },
+  "14018": {
+   "name": "（バター類）　無発酵バター　食塩不使用バター",
+   "energyKcal": 720.0,
+   "proteinG": 0.5,
+   "fatG": 83.0,
+   "carbG": 0.2,
+   "saltG": 0.0
+  }
+ }
+}

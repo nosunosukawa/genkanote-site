@@ -17,6 +17,8 @@
  *   support.html      : tbl-cost      内訳の表（図の数値の表版）
  *                       tbl-steps     積み上げの表
  *   komugi-neage.html : komugi        小麦12%値上げの記事本文の表
+ *   お役立ち記事7本   : data          売値・手数料・人件費・歩留まり・食品表示・アレルゲン・栄養（表示は label-engine.js）
+ *   全記事            : related       ほかのお役立ち記事の一覧 / faq-ld  本文の「よくある質問」から FAQPage を生成
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -514,4 +516,389 @@ console.log(
     `  小麦+${pct0(RISE)}%: +¥${yen2(dFlour)}/枚・材料ぜんぶ +¥${yen2(dAll)}・時給+${WAGE_UP}円 +¥${yen2(dWage)}・両方 +¥${yen2(dBoth)}` +
     `・売価 直販 ${priceRows.map((r) => r.direct).join("→")} / 委託 ${priceRows.map((r) => r.consign).join("→")}\n` +
     `  書き換え: okashi-genka.html / index.html(fig-hero, fig-steps, fig-price) / support.html(tbl-cost, tbl-steps) / komugi-neage.html(komugi)`
+);
+
+/* ============================================================================
+   お役立ち記事（2026-10-16）: 売値・手数料・人件費・歩留まり・食品表示・アレルゲン・栄養
+   原価は genka.js、表示（原材料名・アレルゲン・栄養）は label-engine.js（アプリの label.ts /
+   nutrition.ts / allergens.ts を build-label-engine.mjs で束ねたもの）を実行して作る。
+   栄養の元の値は hatto-sample.json（アプリ同梱の八訂DBから抜いた5食品）。
+   ============================================================================ */
+
+const lctx = {};
+vm.createContext(lctx);
+vm.runInContext(readFileSync(join(here, "label-engine.js"), "utf8"), lctx);
+const GL = lctx.GenkaLabel;
+const HATTO = JSON.parse(readFileSync(join(here, "hatto-sample.json"), "utf8")).foods;
+
+/* 表示用の材料: 原価の例と同じ5品に、表示名・アレルゲン・八訂コードを足す。
+   卵は原価では「1個60g・殻を除いて85%」。表示と栄養は中身の重さで数えるので 60×0.85=51g */
+const EGG_NET = 60 * 0.85;
+const LABEL_META = {
+  butter: { labelName: "バター", allergens: ["nyu"], hattoCode: "14018" },
+  flour: { labelName: "小麦粉", allergens: ["komugi"], hattoCode: "01015" },
+  sugar: { labelName: "砂糖", allergens: [], hattoCode: "03005" },
+  egg: { labelName: "卵", allergens: ["tamago"], hattoCode: "12004", pieceGrams: EGG_NET },
+  almond: { labelName: "アーモンドパウダー", allergens: ["almond"], hattoCode: "05001" },
+};
+const labelIngs = new Map([...ingredients].map(([k, v]) => [k, { ...v, ...LABEL_META[k] }]));
+const lc = { ingredients: labelIngs, recipes: new Map() };
+const doughGrams = recipe.lines.reduce(
+  (s, l) => s + (l.unit === "個" ? l.amount * labelIngs.get(l.ref.id).pieceGrams : l.amount),
+  0
+);
+const BAKED_GRAMS = 470; // 焼いたあと30枚の合計（例。焼き減りは生地と窯で変わる）
+
+const fmtSigned = (n) => (n >= 0 ? "+" : "−") + "¥" + yen(Math.abs(n));
+const sp = (r, ctxx, t = TARGET_RATE) => G.roundPriceUp(G.suggestedPrice(r, ctxx, t), 10);
+
+/* ---------- 1. 売値の決め方 baika-kimekata.html ---------- */
+{
+  const direct = { ...recipe, feeRate: 0, price: undefined };
+  const rows = [0.3, 0.4, 0.5].map((t) => {
+    const d = sp(direct, c, t);
+    let cs;
+    try {
+      cs = "¥" + yen0(sp({ ...recipe, price: undefined }, c, t));
+    } catch {
+      cs = "成り立たない";
+    }
+    return `        <tr><th scope="row">${pct0(t)}%</th><td>¥${yen0(d)}</td><td>${cs}</td></tr>`;
+  });
+  const bD = G.costBreakdown({ ...direct, price: sp(direct, c) }, c);
+  const block = `  <h2>答え: 原価を、目標の原価率で割る</h2>
+  <p>売価 ＝（材料費＋人件費＋包装費）÷（目標の原価率 − 手数料率）。
+     手数料のない直販なら「原価 ÷ 原価率」、委託なら分母から手数料率を引きます。</p>
+  <p><a href="okashi-genka.html">原価計算のやり方</a>と同じ型抜きクッキー（30枚・作業90分・時給¥${yen0(c.defaultHourlyWage)}）で、
+     1枚の原価は<strong>¥${yen(b.basePerPiece)}</strong>（材料¥${yen(b.materialsPerPiece)}＋人件費¥${yen(b.laborPerPiece)}＋包装¥${yen(b.packagingPerPiece)}）です。</p>
+
+  <h2>目標の原価率を変えると、売価はどう動く？</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>目標の原価率</th><th>直販（手数料0%）</th><th>委託（手数料${pct0(recipe.feeRate)}%）</th></tr></thead>
+      <tbody>
+${rows.join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>売価は10円単位で切り上げています。委託${pct0(recipe.feeRate)}%で原価率${pct0(0.3)}%を目指すと、
+     分母が0になって<strong>どんな値段でも届きません</strong>。委託では原価率の目標を手数料率より高く置くしかありません。</p>
+  <p>直販で原価率${pct0(TARGET_RATE)}%なら1枚¥${yen0(sp(direct, c))}。
+     原価（人件費¥${yen(b.laborPerPiece)}を含む）を引いて、1枚¥${yen(sp(direct, c) - bD.totalPerPiece)}が残ります。</p>`;
+  writeBlock("baika-kimekata.html", "data", block);
+}
+
+/* ---------- 2. 手数料の比べ方 tesuuryou-hikaku.html ---------- */
+const BAG = 6; // 1袋6枚
+const SHIP = 400; // 送料（例。購入者が払う額）
+const BAG_PACK = 40; // 袋・シール・乾燥剤（例）
+const MARCHE_FEE = 3000; // 出店料（例・1日）
+const MARCHE_SOLD = 20; // 1日に売れる袋数（例）
+const MINNE = 0.10659; // minne PLUS 非会員・税込（作品価格＋購入オプション＋送料に対して）
+const BASE_PCT = 0.036 + 0.03; // BASE スタンダード: 決済手数料3.6%＋サービス利用料3%
+const BASE_FIX = 40; // BASE: 1注文あたり40円
+const bagRecipe = {
+  ...recipe,
+  yieldCount: recipe.yieldCount / BAG,
+  packagingCostPerPiece: BAG_PACK,
+  price: undefined,
+};
+const channels = [
+  { name: "マルシェで直販", note: `出店料¥${yen0(MARCHE_FEE)}÷${MARCHE_SOLD}袋`, fee: 0, fixed: MARCHE_FEE / MARCHE_SOLD },
+  { name: "お店に委託", note: "売価の30%（例）", fee: 0.3, fixed: 0 },
+  { name: "minne", note: `売価の${(MINNE * 100).toFixed(3)}%＋送料分の手数料`, fee: MINNE, fixed: MINNE * SHIP },
+  {
+    name: "BASE（スタンダード）",
+    note: `売価の${(BASE_PCT * 100).toFixed(1)}%＋¥${BASE_FIX}＋送料分`,
+    fee: BASE_PCT,
+    fixed: BASE_FIX + BASE_PCT * SHIP,
+  },
+];
+const BAG_PRICE = 1000; // 比べるための同じ売価（例）
+const chRows = channels.map((ch) => {
+  const r = { ...bagRecipe, feeRate: ch.fee, packagingCostPerPiece: BAG_PACK + ch.fixed };
+  const need = sp(r, c);
+  const at = G.costBreakdown({ ...r, price: BAG_PRICE }, c);
+  return { ...ch, need, left: BAG_PRICE - at.totalPerPiece, chFee: at.feePerPiece + ch.fixed };
+});
+{
+  const base0 = G.costBreakdown({ ...bagRecipe, feeRate: 0, price: undefined }, c).basePerPiece;
+  const block = `  <h2>例: クッキー${BAG}枚入りの袋を、4つの売り方で売る</h2>
+  <p>中身は<a href="okashi-genka.html">原価計算のやり方</a>と同じクッキー${BAG}枚。袋・シール・乾燥剤は1袋¥${yen0(BAG_PACK)}（例）。
+     1袋の原価は<strong>¥${yen(base0)}</strong>で、その${pct0((BAG * b.laborPerPiece) / base0)}%は人件費です。ネット販売は1注文1袋・送料¥${yen0(SHIP)}を購入者が払う形にしています。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>売り方</th><th>1袋¥${yen0(BAG_PRICE)}で払う手数料</th><th>手元に残る</th><th>原価率${pct0(TARGET_RATE)}%を守る売価</th></tr></thead>
+      <tbody>
+${chRows
+  .map(
+    (r) =>
+      `        <tr><th scope="row">${r.name}<br><span class="muted">${r.note}</span></th><td>¥${yen(r.chFee)}</td><td>¥${yen(r.left)}</td><td><strong>¥${yen0(r.need)}</strong></td></tr>`
+  )
+  .join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>同じ¥${yen0(BAG_PRICE)}でも、手元に残るのは¥${yen(Math.min(...chRows.map((r) => r.left)))}〜¥${yen(Math.max(...chRows.map((r) => r.left)))}。
+     売価をそろえるより、<strong>売り方ごとに値段を分ける</strong>方が筋が通ります。
+     「手元に残る」は人件費を引いたあとの額です。</p>
+  <p>マルシェの出店料は、売れた数で割ると1袋あたりが決まります。${MARCHE_SOLD}袋なら¥${yen0(MARCHE_FEE / MARCHE_SOLD)}、
+     ${MARCHE_SOLD / 2}袋しか売れなければ¥${yen0(MARCHE_FEE / (MARCHE_SOLD / 2))}です。</p>`;
+  writeBlock("tesuuryou-hikaku.html", "data", block);
+}
+
+/* ---------- 3. 人件費 jinkenhi.html ---------- */
+{
+  // 2026年度の地域別最低賃金（厚生労働省「令和8年度 地域別最低賃金 全国一覧」）
+  const wages = [
+    ["例（このサイトの計算例）", c.defaultHourlyWage],
+    ["全国加重平均", 1177],
+    ["新潟県", 1108],
+    ["東京都", 1280],
+  ];
+  const direct = { ...recipe, feeRate: 0, price: undefined };
+  const wRows = wages.map(([label, w]) => {
+    const x = G.costBreakdown(direct, ctxOf(ingredients, w));
+    return `        <tr><th scope="row">${label}</th><td>¥${yen0(w)}</td><td>¥${yen(x.laborPerPiece)}</td><td>¥${yen(x.basePerPiece)}</td><td>¥${yen0(sp(direct, ctxOf(ingredients, w)))}</td></tr>`;
+  });
+  const mins = [60, 90, 120].map((m) => {
+    const r = { ...direct, labor: { minutes: m } };
+    const x = G.costBreakdown(r, c);
+    return `        <tr><th scope="row">${m}分</th><td>¥${yen(x.laborPerPiece)}</td><td>¥${yen(x.basePerPiece)}</td><td>¥${yen0(sp(r, c))}</td></tr>`;
+  });
+  // 倍量で焼く: 材料2倍・60枚・作業150分（例）
+  const dbl = {
+    ...direct,
+    lines: recipe.lines.map((l) => ({ ...l, amount: l.amount * 2 })),
+    yieldCount: 60,
+    labor: { minutes: 150 },
+  };
+  const x30 = G.costBreakdown(direct, c);
+  const x60 = G.costBreakdown(dbl, c);
+  const block = `  <h2>時給を変えると、1枚いくら変わる？</h2>
+  <p>型抜きクッキー30枚・作業90分・直販（手数料0%）で、時給だけを変えました。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>目安</th><th>時給</th><th>人件費/枚</th><th>原価/枚</th><th>原価率${pct0(TARGET_RATE)}%の売価</th></tr></thead>
+      <tbody>
+${wRows.join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+
+  <h2>作業時間を正直に数えると？</h2>
+  <p>時給¥${yen0(c.defaultHourlyWage)}のまま、作業時間だけを変えました。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>作業時間</th><th>人件費/枚</th><th>原価/枚</th><th>原価率${pct0(TARGET_RATE)}%の売価</th></tr></thead>
+      <tbody>
+${mins.join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>30分ちがうと、1枚あたり¥${yen((30 / 60) * c.defaultHourlyWage / recipe.yieldCount)}変わります。</p>
+
+  <h2>まとめて焼くと、1枚の人件費は下がる</h2>
+  <p>倍量（60枚）を150分で焼くと（例）、人件費は1枚<strong>¥${yen(x30.laborPerPiece)} → ¥${yen(x60.laborPerPiece)}</strong>。
+     原価は¥${yen(x30.basePerPiece)} → ¥${yen(x60.basePerPiece)}です。材料費は枚数に比例するので変わりません。</p>`;
+  writeBlock("jinkenhi.html", "data", block);
+}
+
+/* ---------- 4. 歩留まり・ロス budomari.html ---------- */
+{
+  const direct = { ...recipe, feeRate: 0, price: undefined };
+  const eggNo = G.costBreakdown(direct, cc(ing(1)));
+  const eggYes = G.costBreakdown(direct, c);
+  const losses = [0, 0.05, 0.1, 0.2].map((lr) => {
+    const x = G.costBreakdown({ ...direct, lossRate: lr }, c);
+    return `        <tr><th scope="row">${pct0(lr)}%</th><td>¥${yen(x.materialsPerPiece)}</td><td>¥${yen(x.basePerPiece)}</td><td>¥${yen0(sp({ ...direct, lossRate: lr }, c))}</td></tr>`;
+  });
+  const block = `  <h2>卵の殻: 買った重さと、使える重さはちがう</h2>
+  <p>卵は1個60g・殻を除いて${pct0(0.85)}%（約${yen0(EGG_NET)}g）で数えています。
+     この「使える割合」が歩留まりです。</p>
+  <p>卵は10個¥${yen0(ingredients.get("egg").purchasePrice)}、1個¥${yen0(ingredients.get("egg").purchasePrice / 10)}。歩留まり${pct0(0.85)}%で数えると、
+     使える中身1個分は¥${yen(ingredients.get("egg").purchasePrice / 10 / 0.85)}です。
+     材料費は1枚<strong>¥${yen(eggNo.materialsPerPiece)} → ¥${yen(eggYes.materialsPerPiece)}</strong>になります。</p>
+  <p>卵を「g」で量って使うときは、とくに効きます。全卵40gを使うには、殻ごと約${yen0(40 / 0.85)}g分を買う必要があります。</p>
+
+  <h2>割れ・型抜きの端: 製造ロスを入れる</h2>
+  <p>割れて売れない分や、もう使えない生地の端は「製造ロス」です。
+     売れる枚数が減るのと同じなので、材料費を(1 − ロス率)で割って数えます。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>製造ロス</th><th>材料費/枚</th><th>原価/枚</th><th>原価率${pct0(TARGET_RATE)}%の売価（直販）</th></tr></thead>
+      <tbody>
+${losses.join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>ロスを${pct0(0)}%→${pct0(0.1)}%にすると、材料費は1枚¥${yen(G.costBreakdown({ ...direct, lossRate: 0.1 }, c).materialsPerPiece - G.costBreakdown({ ...direct, lossRate: 0 }, c).materialsPerPiece)}上がります。
+     人件費はロスでは増やしていません（割れた分を焼いた時間も、作業時間に入っているため）。</p>
+
+  <h2>焼き減りは、原価には入れない</h2>
+  <p>生地${yen0(doughGrams)}gが焼いて${yen0(BAKED_GRAMS)}g（例）になっても、30枚は30枚。
+     <strong>原価は「何枚できたか」で割る</strong>ので、焼き減りは関係しません。</p>
+  <p>焼き減りが効くのは<strong>内容量と栄養成分表示</strong>です。100gあたりの値は、焼いたあとの重さで割ります
+     （<a href="eiyo-suiteichi.html">栄養成分表示の推定値</a>）。</p>`;
+  writeBlock("budomari.html", "data", block);
+}
+
+/* ---------- 5. 食品表示ラベル shokuhin-hyoji.html ---------- */
+const stmtPlain = GL.ingredientStatement(recipe, lc);
+const stmtOrigin = GL.ingredientStatement({ ...recipe, labelFields: { topOrigin: "国内製造" } }, lc);
+{
+  const block = `  <h2>例: 型抜きクッキーのラベル</h2>
+  <p>原材料名の行は、原価ノートの計算エンジンが配合から並べたものです（重い順）。
+     ほかの行は記入例です。</p>
+  <div class="scroll">
+    <table class="ikkatsu">
+      <tbody>
+        <tr><th scope="row">名称</th><td>クッキー</td></tr>
+        <tr><th scope="row">原材料名</th><td>${esc(stmtOrigin)}</td></tr>
+        <tr><th scope="row">内容量</th><td>${BAG}枚</td></tr>
+        <tr><th scope="row">賞味期限</th><td>2026.11.15</td></tr>
+        <tr><th scope="row">保存方法</th><td>直射日光、高温多湿を避けて保存してください。</td></tr>
+        <tr><th scope="row">製造者</th><td>（氏名）<br>（住所）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">配合: 薄力粉200g・バター150g・砂糖90g・卵1個（中身約${yen0(EGG_NET)}g）・アーモンドパウダー50g。
+     「国内製造」は重量1位の小麦粉の原料原産地の書き方の例です。実際は仕入れた袋の表示で確かめます。</p>`;
+  writeBlock("shokuhin-hyoji.html", "data", block);
+}
+
+/* ---------- 6. アレルゲン allergen-hyoji.html ---------- */
+{
+  const cashewIngs = new Map(labelIngs);
+  cashewIngs.delete("almond");
+  cashewIngs.set("cashew", {
+    id: "cashew",
+    name: "カシューナッツ",
+    labelName: "カシューナッツ",
+    purchasePrice: 0,
+    packAmount: 100,
+    packUnit: "g",
+    yieldRate: 1,
+    allergens: ["cashew"],
+  });
+  const cashewRecipe = {
+    ...recipe,
+    lines: recipe.lines.map((l) => (l.ref.id === "almond" ? { ...l, ref: { kind: "ingredient", id: "cashew" } } : l)),
+  };
+  const stmtCashew = GL.ingredientStatement(cashewRecipe, { ingredients: cashewIngs, recipes: new Map() });
+  const mand = GL.ALLERGENS.filter((a) => a.mandatory).map((a) => a.name);
+  const rec = GL.ALLERGENS.filter((a) => !a.mandatory).map((a) => a.name);
+  const block = `  <h2>表示する品目（2026年4月から）</h2>
+  <div class="scroll">
+    <table class="wrapcells">
+      <tbody>
+        <tr><th scope="row">義務<br>${mand.length}品目</th><td>${mand.join("・")}</td></tr>
+        <tr><th scope="row">推奨<br>${rec.length}品目</th><td>${rec.join("・")}</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">表の並びは原価ノートの登録順です。「乳」はラベルでは「乳成分」と書きます。</p>
+
+  <h2>例: アーモンドをカシューナッツに替えたクッキー</h2>
+  <p>同じ配合でアーモンドパウダー50gをカシューナッツ50gに替えると、原材料名はこうなります（原価ノートの計算エンジンで作成）。</p>
+  <p class="labelline">${esc(stmtCashew)}</p>
+  <p>替える前はこうでした。</p>
+  <p class="labelline">${esc(stmtPlain)}</p>`;
+  writeBlock("allergen-hyoji.html", "data", block);
+}
+
+/* ---------- 7. 栄養成分の推定値 eiyo-suiteichi.html ---------- */
+{
+  const nctx = { ...lc, nutritionByHattoCode: new Map(Object.entries(HATTO)) };
+  const nBaked = GL.recipeNutrition({ ...recipe, yieldTotalGrams: BAKED_GRAMS }, nctx);
+  const nDough = GL.recipeNutrition({ ...recipe, yieldTotalGrams: doughGrams }, nctx);
+  const f = (n, per100) => [
+    ["熱量", `${n.energyKcal.toFixed(0)}kcal`],
+    ["たんぱく質", `${n.proteinG.toFixed(1)}g`],
+    ["脂質", `${n.fatG.toFixed(1)}g`],
+    ["炭水化物", `${n.carbG.toFixed(1)}g`],
+    ["食塩相当量", `${GL.formatSaltG(n.saltG, per100)}g`],
+  ];
+  const piece = f(nBaked.perPiece, nBaked.per100g.saltG);
+  const p100b = f(nBaked.per100g, nBaked.per100g.saltG);
+  const p100d = f(nDough.per100g, nDough.per100g.saltG);
+  const basis = GL.pieceBasisLabel({ yieldCount: recipe.yieldCount, yieldTotalGrams: BAKED_GRAMS });
+  const block = `  <h2>例: 型抜きクッキー1枚の推定値</h2>
+  <p>八訂の5食品（薄力粉・バター・グラニュー糖・全卵・アーモンド）の100gあたりの値に、配合の重さを掛けて足し、30枚で割りました。
+     焼いたあと30枚で${yen0(BAKED_GRAMS)}g（例）です。</p>
+  <div class="scroll">
+    <table class="nut">
+      <thead><tr><th>栄養成分表示</th><th>${basis}</th></tr></thead>
+      <tbody>
+${piece.map(([k, v]) => `        <tr><th scope="row">${k}</th><td>${v}</td></tr>`).join("\n")}
+        <tr><td colspan="2" class="estimate">この表示値は、目安です。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted">原価ノートのラベルと同じ丸め方（熱量は整数、ほかは小数第1位、食塩相当量は0.1g未満なら有効数字1桁）。</p>
+
+  <h2>100gあたりで書くなら、焼いたあとの重さで割る</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>100gあたり</th><th>焼いたあと${yen0(BAKED_GRAMS)}gで割る</th><th>生地${yen0(doughGrams)}gで割ると</th></tr></thead>
+      <tbody>
+${p100b.map(([k, v], i) => `        <tr><th scope="row">${k}</th><td>${v}</td><td>${p100d[i][1]}</td></tr>`).join("\n")}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">表は横にスワイプできます →</p>
+  <p>焼くと水分が抜けて軽くなります。1枚あたりの値は変わりませんが、
+     100gあたりは焼いたあとの重さで割らないと<strong>少なく出ます</strong>。</p>`;
+  writeBlock("eiyo-suiteichi.html", "data", block);
+}
+
+/* ---------- 関連記事（全記事の下に同じ一覧） と FAQPage の JSON-LD ---------- */
+const GUIDES = [
+  ["okashi-genka.html", "お菓子の原価計算のやり方"],
+  ["baika-kimekata.html", "手作りお菓子の売値はどう決める？"],
+  ["tesuuryou-hikaku.html", "委託・マルシェ・minne・BASE、手数料でいくら残る？"],
+  ["jinkenhi.html", "お菓子の原価に、自分の人件費はどう入れる？"],
+  ["budomari.html", "卵の殻や割れたクッキーは、原価にどう入れる？"],
+  ["komugi-neage.html", "小麦が12%上がると、クッキー1枚いくら上がる？"],
+  ["shokuhin-hyoji.html", "手作りお菓子の食品表示ラベルには、何を書く？"],
+  ["allergen-hyoji.html", "カシューナッツの表示義務はいつから？"],
+  ["eiyo-suiteichi.html", "栄養成分表示の「推定値」はどう作る？"],
+];
+const stripTags = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+for (const [file] of GUIDES) {
+  const list = GUIDES.filter(([f]) => f !== file)
+    .map(([f, t]) => `      <li><a href="${f}">${esc(t)}</a></li>`)
+    .join("\n");
+  writeBlock(
+    file,
+    "related",
+    `  <nav class="related" aria-label="お役立ち記事">
+    <h2>ほかのお役立ち記事</h2>
+    <ul>
+${list}
+    </ul>
+  </nav>`
+  );
+  // FAQ: 本文の <!-- faq:start --> 〜 <!-- faq:end --> の h3/p をそのまま JSON-LD にする（一字一句一致）
+  const src = readFileSync(join(here, file), "utf8");
+  const m = src.match(/<!-- faq:start -->([\s\S]*?)<!-- faq:end -->/);
+  if (m) {
+    const qa = [...m[1].matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)].map(([, q, a]) => ({
+      "@type": "Question",
+      name: stripTags(q),
+      acceptedAnswer: { "@type": "Answer", text: stripTags(a) },
+    }));
+    const ld = { "@context": "https://schema.org", "@type": "FAQPage", inLanguage: "ja", mainEntity: qa };
+    writeBlock(file, "faq-ld", `<script type="application/ld+json">\n${JSON.stringify(ld, null, 1)}\n</script>`);
+  }
+}
+
+console.log(
+  `お役立ち記事: 原材料名「${stmtPlain}」・生地${doughGrams}g・` +
+    `手数料比較 ${chRows.map((r) => `${r.name}:残¥${yen(r.left)}/要¥${r.need}`).join(" / ")}`
 );

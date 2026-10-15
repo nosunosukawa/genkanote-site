@@ -1,0 +1,66 @@
+/* お役立ち記事の共通スタイル（2026-10-16）。配色は komugi-neage.html と同じトークン。
+   字体はヒラギノを先頭にする（-apple-system が先頭だと iOS シミュレータの Safari で日本語が□になった実例がある） */
+:root{
+  --bg:#F5F6F3; --card:#FFFFFF; --ink:#16181D; --ink-soft:#565D66;
+  --accent:#2B4A78; --ok:#1F7A45; --low:#8F6400; --high:#B23427; --line:#D9DCD6;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14161A; --card:#1D2025; --ink:#E8EAED; --ink-soft:#9BA1A8;
+    --accent:#8FAAD1; --ok:#55A578; --low:#C79A3C; --high:#D06A5C; --line:#2E3238;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",Meiryo,sans-serif;
+  line-height:1.8;padding:24px 16px 64px;-webkit-font-smoothing:antialiased;overflow-wrap:anywhere}
+.wrap{max-width:680px;margin:0 auto}
+header{margin:20px 0 8px}
+.crumb{font-size:13.5px}
+h1{font-size:clamp(23px,6.4vw,27px);line-height:1.4;letter-spacing:-.4px;font-weight:800;margin-top:10px}
+.meta{margin-top:8px;font-size:13.5px;color:var(--ink-soft)}
+h2{font-size:19px;font-weight:800;letter-spacing:-.2px;margin:40px 0 10px;line-height:1.5}
+h3{font-size:16px;font-weight:700;margin:22px 0 4px;line-height:1.6}
+p + p{margin-top:10px}
+.lead{margin-top:18px;font-size:16.5px}
+a{color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.muted{color:var(--ink-soft);font-size:13.5px}
+p.muted{margin-top:10px}
+ul.list{margin:10px 0 0 1.2em}
+ul.list li + li{margin-top:4px}
+.scroll{overflow-x:auto;margin-top:14px;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;min-width:100%;font-size:14.5px;white-space:nowrap}
+th,td{padding:7px 12px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:var(--card);font-size:12.5px;color:var(--ink-soft);text-align:right}
+tbody th,thead th:first-child{text-align:left}
+tbody th .muted{font-size:12px;font-weight:400}
+tr.total td,tr.total th{font-weight:800;border-top:2px solid var(--line)}
+/* 文が入る表（一括表示・品目一覧）は折り返す */
+table.ikkatsu,table.wrapcells{white-space:normal}
+table.ikkatsu th,table.wrapcells th{white-space:nowrap;font-weight:700;font-size:13.5px}
+table.ikkatsu td,table.wrapcells td{text-align:left}
+table.nut{min-width:0;width:auto}
+table.nut td.estimate{text-align:left;font-size:12.5px;color:var(--ink-soft)}
+.labelline{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:10px 14px;margin-top:10px;font-size:14.5px}
+.hint{margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+@media (min-width:700px){ .hint{display:none} }
+@media (max-width:560px){ table{font-size:13px} th,td{padding:6px 9px} }
+.note{background:var(--card);border-left:4px solid var(--low);border-radius:6px;
+  padding:12px 14px;margin-top:16px;font-size:14.5px}
+.faq h3{margin-top:18px}
+.src{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px 14px 32px;margin-top:14px;font-size:14px}
+.src li + li{margin-top:6px}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin-top:40px}
+.cta h2{margin:0 0 8px;font-size:16px}
+.cta p{font-size:14.5px}
+.btn{display:inline-block;margin-top:12px;background:var(--accent);color:var(--bg);
+  padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+.related ul{list-style:none;border-top:1px solid var(--line)}
+.related li{border-bottom:1px solid var(--line)}
+.related a{display:block;padding:12px 0;text-decoration:none;font-size:15px}
+footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}

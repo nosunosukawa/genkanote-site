@@ -21,7 +21,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",Meiryo,sans-serif;
-    line-height:1.8;padding:24px 20px 64px;-webkit-font-smoothing:antialiased}
+    line-height:1.8;padding:24px 20px 64px;-webkit-font-smoothing:antialiased;overflow-wrap:anywhere}
   .wrap{max-width:680px;margin:0 auto}
   header{margin:20px 0 8px}
   .crumb{font-size:13.5px}
@@ -52,6 +52,9 @@
   .cta p{font-size:14.5px}
   .btn{display:inline-block;margin-top:12px;background:var(--accent);color:var(--bg);
     padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700}
+  .related ul{list-style:none;border-top:1px solid var(--line)}
+  .related li{border-bottom:1px solid var(--line)}
+  .related a{display:block;padding:12px 0;text-decoration:none;font-size:15px}
   footer{margin-top:44px;text-align:center;color:var(--ink-soft);font-size:13px}
 </style>
 <meta property="og:title" content="小麦が12%上がると、クッキー1枚いくら上がる？">
@@ -175,6 +178,22 @@
      <a href="okashi-genka.html">お菓子の原価計算のやり方</a>と同じものを使っています。
      実際の値付けはご自身の仕入れ値と販売条件で計算してください。数値は
      <code>make-genka-example.mjs</code> がアプリの計算エンジンを実行して生成しています。</p>
+
+  <!-- related:start（node make-genka-example.mjs が生成。手で直さない） -->
+  <nav class="related" aria-label="お役立ち記事">
+    <h2>ほかのお役立ち記事</h2>
+    <ul>
+      <li><a href="okashi-genka.html">お菓子の原価計算のやり方</a></li>
+      <li><a href="baika-kimekata.html">手作りお菓子の売値はどう決める？</a></li>
+      <li><a href="tesuuryou-hikaku.html">委託・マルシェ・minne・BASE、手数料でいくら残る？</a></li>
+      <li><a href="jinkenhi.html">お菓子の原価に、自分の人件費はどう入れる？</a></li>
+      <li><a href="budomari.html">卵の殻や割れたクッキーは、原価にどう入れる？</a></li>
+      <li><a href="shokuhin-hyoji.html">手作りお菓子の食品表示ラベルには、何を書く？</a></li>
+      <li><a href="allergen-hyoji.html">カシューナッツの表示義務はいつから？</a></li>
+      <li><a href="eiyo-suiteichi.html">栄養成分表示の「推定値」はどう作る？</a></li>
+    </ul>
+  </nav>
+  <!-- related:end -->
 
   <footer>
     © 2026 Nobutaka Kawasaki · <a href="index.html">原価ノート</a> · <a href="https://apps.apple.com/jp/app/id6799887510" target="_blank" rel="noopener">App Store で入手</a> · <a href="genka-calculator.html">原価計算ツール</a> · <a href="privacy.html">プライバシーポリシー</a>
